@@ -1,0 +1,572 @@
+@import url('https://fonts.googleapis.com/css2?family=Uchen&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Buenard&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    height: 100vh;
+  }
+/************************************PAGE HOME **************************************/
+
+
+  /******************************* debut header1 *******************************/
+  .title {
+    color: #34513f;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .title:hover {
+    color: #a75b43;
+  }
+  .list {
+    list-style: none;
+    margin-bottom: 0;
+    width: 20vw;
+  }
+  hr {
+    margin-top: 0;
+  }
+  /******************************* fin header1 *******************************/
+  
+  /******************************* debut header2 *******************************/
+  .icon {
+    color: #181818;
+    text-align: center;
+  }
+  
+  /******************************* fin header2 *******************************/
+
+  /******************************* debut Navbar *******************************/
+  .title1 {
+    color: #34513f;
+    letter-spacing: 3px;
+    font-size: 14px;
+    text-decoration: none;
+  }
+  .navbar {
+    background-color: #34513f;
+    color: white;
+    height: 12vh; 
+    cursor: pointer;
+    font-size: 18px;
+  }
+  .navbar a {
+    color: white;
+    text-decoration: none;
+  }
+  .categorie {
+    border-radius: 5px;
+    background-color: #d6e8da;
+    padding: 15px 35px;
+    border: none;
+    outline: none;
+  }
+  .navbar ul li {
+    padding-right: 25px;
+  }
+  .search {
+    border-radius: 5px;
+    background-color: #d6e8da;
+    padding: 8px 20px;
+    border: none;
+    color: #34513f;
+    margin: 0;
+    outline: none;
+  }
+  .fa-search {
+    position: relative;
+    right: 35px;
+    color: #34513f;
+  }
+  .li{
+    list-style: none;
+  }
+  /******************************* fin Navbar *******************************/
+  /******************************* debut Slide *******************************/
+  .btnSlide{
+    background-color: #34513f;
+    color: #fff;
+    border: none;
+  }
+  .btnSlide:hover{
+    background-color: #a75b43;
+    color: #fff;
+    border: none;
+  }
+  /******************************* fin Slide *******************************/
+  /******************************* debut Card Categorie *******************************/
+  .cardCategorie{
+    margin-left: 15vw;
+    margin-top: 40px;
+  }
+  /******************************* fin Card Categorie *******************************/
+  
+  /******************************* debut Offres *******************************/
+  .cardOffre1{
+    width: 40vw;
+    height: 30vh;
+    background-color: #D6E8DA;
+    margin-left: 10vw;
+  }
+  .cardOffre1>img{
+    width: 20vw;
+    height: 30vh;
+  }
+  .cardOffre1 h5{
+    font-family: 'Uchen', serif;
+  }
+  .offreText{
+    padding-top: 10vh;
+  }
+  .offreText>h5{
+    padding-top: 2vh;
+  }
+  .cardOffre2{
+    width: 40vw;
+    height: 30vh;
+    background-color: #34513f;
+    margin-left: 5vw;
+  }
+  .cardOffre2>img{
+    width:15vw;
+    padding-top: 60px;
+  }
+  .cardOffre2>h2{
+    color: #D6E8DA;
+    font-size: 26px;
+    text-transform: uppercase;
+    line-height: 36px;
+    letter-spacing: 3px;
+    font-family: 'Buenard', serif;
+    text-align: center;
+  }
+  /******************************* fin Offres *******************************/
+  
+  /******************************* debut Part Shop *******************************/
+  .partShop{
+    font-weight: 300;
+    font-size: 38px;
+    line-height: 1.16;
+    letter-spacing: 0.01em;
+    color: black;
+    text-align: center;
+    padding: 38px 0px 38px 0px;
+  }
+  .shop>h4{
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #34513f;
+    text-align: center;
+  }
+  .shop>h4:hover{
+    color: #a75b43;
+    padding-bottom: 30px;
+  }
+  .listProduct{
+    margin-left: 5vw;
+  }
+  /******************************* debut Product *******************************/
+  .product{
+    width: 20vw;
+    height: 40vh;
+    background-color: #D6E8DA;
+    background-image: url(./img/360-jewelry-photography-blue-ring001-650x650.jpg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 20px;
+  }
+  .product>span{
+    width: 45px;
+    height: 30px;
+    background-color: #a75b43;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 3px 5px;
+  }
+  .product>h6{
+    width: 110px;
+    height: 30px;
+    text-align: center;
+    background-color: #34513f;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+  }
+  .cardProduct{
+    cursor: pointer;
+  }
+  .cardProduct h1{
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 18px;
+    color: #34513F;
+  }
+  .prixOriginal{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    text-decoration-line: line-through;
+    color: #B5B5B5;
+  }
+  .prix{
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    color: #34513F;
+  }
+  .detailsProduct{
+    display: none;
+    color: #ffffff;
+    background-color: #34513F;
+    width: 25vw;
+    height: 8vh;
+    text-align: center;
+    padding-top: 12px;
+  }
+  .detailsProduct>h5{
+    padding-right: 8px;
+  }
+  .cardProduct:hover{
+    display: inline;
+  }
+  /******************************* fin Product *******************************/
+  /******************************* fin Part Shop *******************************/
+  
+  /******************************* debut AboutUs *******************************/
+  
+.aboutus {
+  height: 100vh;
+  width: 100vw;
+  background-image: url('./img/atelier.webp');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 15vh;
+  background-color: #464646;
+  opacity: 0.8;
+}
+.aboutus h1 {
+  color: white;
+  font-weight: 300;
+  font-size: 38px;
+  line-height: 1.16;
+  letter-spacing: 0.01em;
+}
+.aboutus center {
+  width: 600px;
+  text-align: center;
+  color: #ffffff;
+  font-size: 19px;
+  line-height: 34px;
+  letter-spacing: 0.2px;
+  margin: auto;
+  margin-top: 10vh;
+}
+.btn {
+  margin-top:15vh;
+  border: 3px solid #34513F;
+  color: #34513F;
+  padding: 15px 40px;
+  border-radius: 0%;
+  font-size: 20px;
+  font-weight: 500;
+}
+.btn:hover {
+  border: 2px solid #34513F;
+  background-color: #34513F;
+  color: #fff;
+}
+  /******************************* fin AboutUs *******************************/
+  
+  /******************************* debut cardOffre *******************************/
+  .cardOffre{
+    height: 8vh;
+    width: 100vw;
+    padding: 0 30px;
+    background-color: #D6E8DA;
+    text-align: center;
+    color: #34513F;
+  }
+  .cardOffre h6{
+    font-size: 18px;
+  }
+  /******************************* fin cardOffre *******************************/
+  
+  /******************************* debut Post Instagram *******************************/
+  /* .postInsta>img{
+    width: 20vw;
+    height: 40vh;
+    cursor: pointer;
+  }
+  .postInsta1{
+    background-image: url('./img/360-jewelry-photography-blue-ring001-650x650.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 20vw;
+    height: 40vh;
+    cursor: pointer;
+  }
+  .postInsta1:hover{
+    width: 20vw;
+    height: 40vh;
+    background-color: #D6E8DA;
+    opacity: 0.6;
+    margin: 20px;
+  }
+  .postInsta1:hover .icon:hover{
+   display: block;
+  }
+  .postInsta:hover{
+    background-color: #D6E8DA;
+    opacity: 0.6;
+  }
+  .icon{
+    order: 0;
+    color: #34513F;
+    position: relative;
+    top: 25vh;
+    left: 10vw;
+  } */
+  
+  /******************************* fin Post Instagram *******************************/
+
+  
+  /******************************* debut Footer *******************************/
+  .footer{
+    width: 100vw;
+    height: 100vh;
+    background-color: #34513F;
+    color: #ffffff;
+    padding-top: 15vh ;
+  }
+  .firstFooter{
+    padding: 0 20px;
+  }
+  .firstFooter>img{
+    width: 5vw;
+    height: 10vh;
+
+  }
+  .firstFooter h4{
+    font-size: 12px;
+    text-transform: uppercase;
+    line-height: 36px;
+    letter-spacing: 2px;
+    color: #D6E8DA;
+  }
+  .emailSubscribe{
+    letter-spacing: 2px;
+    width: 20vw;
+    height: 40px;
+    background: hsla(0, 0%, 100%, 0.5);
+    padding: 0 10px;
+    margin-right: 10px;
+    margin-left: 20px;
+    border: none;
+    outline: none;
+
+  }
+  .emailSubscribe::placeholder{
+    font-size: 16px;
+  }
+  .btnSubscribe{
+    border: none;
+    margin-left: 10px;
+    background: #d6e8da;
+    color: #34513f;
+    width: 10vw;
+    padding: 0 10px;
+    height: 40px;
+    line-height: 40px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .btnSubscribe:hover{
+    background-color: #181818;
+    color: white;
+  }
+  .footer hr{
+    margin-top: 10vh;
+  }
+  .secandFooter{
+    padding: 40px 20px;
+  }
+  .iconSocial:hover{
+    width: 50px;
+    height: 40px;
+    padding: 5px;
+    background-color: #ffffff;
+    color: #34513F;
+    border-radius: 30px;
+    cursor: pointer;
+  }
+  /******************************* fin Footer *******************************/
+  
+/******************************** PAGE HOME **************************************/
+
+/********************************** PAGE SHOP ************************************/
+
+  /*************************** debut Category Slide ***************************/
+  .CategorySlide{
+    background-image: url('./img/jewerly 1.png');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 60vh;
+    width: 100vw;
+    padding-top: 20vh;
+  }
+  .cardCategorySlide{
+    margin-left: 40px;
+  }
+  .cardCategorySlide img{
+    height: 16vh;
+    width: 8vw;
+  }
+  .cardCategorySlide img:hover{
+    border: 1px solid #181818;
+    border-radius: 60px;
+    padding: 4px;
+  }
+  .cardCategorySlide h6{
+    text-align: center;
+    margin-top: 10px;
+    font-size: 18px;
+    text-transform: uppercase;
+    color: #000000;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .cardCategorySlide h6:hover{
+    color: #34513F;
+    border-bottom: 5px solid #34513F;
+    border-radius: 5px;
+  }
+
+  /****************************** fin Category Slide  ****************************/
+
+  /*************************** debut Section ***************************/
+  section{
+    width: 100vw;
+    display: flex;
+  }
+  aside{
+    width: 25vw;
+  }
+  article{
+    width: 72vw;
+  }
+  main{
+    width: 100vw;
+  }
+  .asideCatgorie>h1{
+    font-family: 'Buenard';
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 20px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: #000000;
+  }
+  .sousCategories h6{
+    font-family: 'Uchen' ;
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1.75;
+    cursor: pointer;
+    color: #868686;
+  }
+  .sousCategories h6:hover{
+    color:#34513F;
+  }
+  .sousCategories span{
+    width: 30px;
+    height: 30px;
+    background: #f1f1f1;
+    text-align: center;
+    line-height: 25px;
+    font-size: 16px;
+    color: #868686;
+    border-radius: 15px;
+    cursor: pointer;
+
+  }
+  article h6{
+    color: #868686;
+    text-transform: none;
+    font-weight: 400;
+  } 
+  article > div > div .dropdown-toggle{
+    margin: 0;
+    font-size: 12px;
+
+  }
+  /****************************** fin Section  ****************************/
+
+/********************************** PAGE SHOP ************************************/
+
+/********************************** PAGE Product ************************************/
+.sectionProduct{
+  margin: 20px;
+  margin-left: 5vw;
+}
+.asideProduct{
+  width: 40vw;
+}
+.articleProduct{
+  width: 40vw;
+}
+.articleProduct h1{
+  font-size: 35px;
+  line-height: 50px;
+  color: #34513F;
+  word-break: break-word;
+  margin-bottom: 20px;
+}
+.articleProduct p{
+  color: #464646;
+  font-size: 16px;
+  line-height: 30px;
+  letter-spacing: 0.0125em;
+  margin-bottom: 10px;
+}
+.articleProduct h4{
+  line-height: 36px;
+  font-size: 25px;
+  color: #34513f;
+  font-weight: 600;
+}
+.asideProduct img{
+  width: 30vw;
+  margin-left: 5vw;
+  cursor: pointer;
+}
+.btnPrev,.btnNext{
+  width:50px;
+  height: 50px;
+  background-color: #34513F;
+  color: #fff;
+  margin-top: 15vh;
+}
+.btnPrev{
+  margin-left: 15px;
+}
+.btnNext{
+  margin-right: 15px;
+}
+/********************************** PAGE Product ************************************/
