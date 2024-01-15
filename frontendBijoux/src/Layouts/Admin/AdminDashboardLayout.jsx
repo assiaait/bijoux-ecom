@@ -235,21 +235,14 @@ export default function AdminDashboardLayout() {
                                 </ListItemIcon>
                                 <ListItemText primary="Integrations" />
                             </ListItemButton>
-                            <Link
-                                to={ADMIN_MANAGE_PRODUCTS_ROUTE}
-                                style={{
-                                    textDecoration: "none",
-                                    textTransform: "none",
-                                    color: "#181818",
-                                }}
-                            >
+                            <Link to={ADMIN_MANAGE_PRODUCTS_ROUTE} style={{ textDecoration:'none', textTransform:'none', color:'#181818'}}>
                                 <ListItemButton>
                                     <ListItemIcon>
                                         <LocalMallOutlinedIcon
                                             style={{ color: "#34513f" }}
                                         />
                                     </ListItemIcon>
-                                    <ListItemText primary="Create Product" />
+                                    <ListItemText  primary="Create Product" />
                                 </ListItemButton>
                             </Link>
                             <Divider sx={{ my: 1 }} />

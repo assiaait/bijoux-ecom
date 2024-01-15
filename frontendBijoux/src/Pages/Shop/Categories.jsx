@@ -1,5 +1,5 @@
 
-import Box from '@mui/material/Box';
+// import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Earring from '../../img/earrings.png';
 import Bracelets from '../../img/bracelets.png';
@@ -10,7 +10,7 @@ import Necklages from '../../img/necklage.png';
 export default function ColumnsGrid() {
   return (
     <div className=' cardCategorie'>
-        <Box sx={{ flexGrow: 1 }}>
+        <div style={{ flexGrow: 1 }}>
             <Grid className='' container spacing={2} columns={16}>
                 <Grid item xs={4}>
                     <div style={{backgroundColor:'#fff',marginRight:'10px',height:'20vh',transition: 'all .3s'}}>
@@ -48,7 +48,7 @@ export default function ColumnsGrid() {
                     </div>
                 </Grid>
             </Grid>
-        </Box>
+        </div>
     </div>
   );
 }

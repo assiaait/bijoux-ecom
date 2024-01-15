@@ -17,7 +17,8 @@ export const ROUTE_LOGIN = "/login";
 export const CLIENT_HOME_ROUTE = "/clientHome";
 export const ADMIN_BASE_ROUTE = "/admin";
 export const ADMIN_DASHBOARD_ROUTE = ADMIN_BASE_ROUTE + "/adminDashboard";
-export const ADMIN_MANAGE_PRODUCTS_ROUTE = ADMIN_BASE_ROUTE + "/manage-products";
+export const ADMIN_MANAGE_PRODUCTS_ROUTE =
+    ADMIN_BASE_ROUTE + "/manage-products";
 export const router = createBrowserRouter([
     {
         //partie visiteurs
