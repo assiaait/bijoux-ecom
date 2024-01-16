@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import {
-  Search,
-} from '@mui/icons-material'
+import { Search } from '@mui/icons-material'
 import { Link } from 'react-router-dom'
 import Chiper from "./Chiper.jsx";
 
@@ -12,11 +10,6 @@ class NavBar extends Component {
         <div>
           <div className='d-flex column justify-content-between px-5 navbar'>
           <Chiper />
-            {/* <span className="d-flex column justify-content-between title1 categorie">
-                            <Menu />
-                            Browse Categorie
-                            <ChevronRight />
-                        </span> */}
             <div>
               <ul className='d-flex column justify-content-between li pt-3'>
                 <li>
@@ -34,7 +27,7 @@ class NavBar extends Component {
                   <Link to='/Blog'>Blog</Link>
                 </li>
                 <li>
-                  <Link to='/'>Contact</Link>
+                  <Link to='/contact'>Contact</Link>
                 </li>
               </ul>
             </div>

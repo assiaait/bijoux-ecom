@@ -157,7 +157,7 @@
     text-align: center;
     padding: 38px 0px 38px 0px;
   }
-  .shop>h4{
+  .shop h4{
     font-weight: 400;
     font-size: 16px;
     line-height: 19px;
@@ -203,9 +203,9 @@
   .cardProduct{
     cursor: pointer;
   }
-  .cardProduct h1{
-    font-weight: 600;
-    font-size: 16px;
+  .cardProduct h6{
+    font-weight: 500;
+    font-size: 14px;
     line-height: 18px;
     color: #34513F;
   }
@@ -238,6 +238,15 @@
   }
   .cardProduct:hover{
     display: inline;
+  }
+  .btn-cart-add{
+    width: 20vw;
+    height: 5vh;
+    background-color: #34513F;
+    border: none;
+    color: #ffffff;
+    position: relative;
+    bottom: 120px;
   }
   /******************************* fin Product *******************************/
   /******************************* fin Part Shop *******************************/

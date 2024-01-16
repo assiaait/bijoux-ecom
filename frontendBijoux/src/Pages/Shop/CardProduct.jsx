@@ -1,28 +1,61 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+
 class CardProduct extends Component {
-  render() {
-    return (
-        <React.Fragment>
-            <div className="cardProduct">
+    constructor(props) {
+        super(props);
+        this.state = {
+            isHovered: false,
+        };
+    }
+
+    handleMouseEnter = () => {
+        this.setState({ isHovered: true });
+    };
+
+    handleMouseLeave = () => {
+        this.setState({ isHovered: false });
+    };
+
+    handleAddToCart = () => {
+        // Add your "Add to Cart" logic here
+        console.log("Product added to cart!");
+    };
+
+    render() {
+        const { isHovered } = this.state;
+
+        return (
+            <div
+                className={`cardProduct ${isHovered ? "hovered" : ""}`}
+                onMouseEnter={this.handleMouseEnter}
+                onMouseLeave={this.handleMouseLeave}
+            >
                 <div className="product d-flex justify-content-between">
                     <span>-40%</span>
-                    <h6 className='pt-1 px-1'>Out Of Stock</h6>
+                    <h6 className="pt-1 px-1" style={{ color: "#ffffff" }}>
+                        Out Of Stock
+                    </h6>
                 </div>
-                {/* <div className='detailsProduct d-flex column align-items-center justify-content-center'>
-                    <h5>Read More</h5>
-                    <ArrowForwardIcon />
-                </div> */}
-                <div className='pt-3'>
-                    <h1>W CARAT AQUAMARINE AND DIAMOND</h1>
-                    <div className='d-flex column prix '>
-                        <p className='prixOriginal'>$150.00</p>
-                        -
-                        <p className=''>$90.00</p>
+                <div className="pt-3">
+                    <h6>W CARAT AQUAMARINE AND DIAMOND</h6>
+                    <div className="d-flex column prix ">
+                        <p className="">$90.00</p>
                     </div>
                 </div>
+                {isHovered && (
+                    <Link to="/checkout">
+                        <button
+                            className="add-to-cart-button btn-cart-add"
+                            onClick={this.handleAddToCart}
+                        >
+                            Add to Cart
+                        </button>
+                    </Link>
+                )}
             </div>
-        </React.Fragment>
-    )
-  }
+        );
+    }
 }
-export default CardProduct
+
+export default CardProduct;

@@ -32,11 +32,13 @@ export default function CreateProducts() {
         description: "",
         image: null,
     });
+    const [messageChangedImage, setMessageChangedImage]=useState()
 
     const handleImageChange = (e) => {
         const selectedImage = e.target.files[0];
         setFormData({ ...formData, image: selectedImage });
         console.log("Image changed:", selectedImage);
+        setMessageChangedImage(`Image changed: ${selectedImage.name}`);
     };
     const handleClose = (event, reason) => {
         if (reason === "clickaway") {
@@ -83,7 +85,7 @@ export default function CreateProducts() {
                 description: "",
                 image: null,
             });
-    
+
             setTimeout(() => {
                 setSuccessMessage(null);
                 setOpen(false); // Close the Snackbar
@@ -230,6 +232,9 @@ export default function CreateProducts() {
                                 onChange={(e) => handleImageChange(e)}
                             />
                         </Button>
+                            <p>
+                                {messageChangedImage}
+                            </p>
                     </Grid>
 
                     <Grid item xs={12}>

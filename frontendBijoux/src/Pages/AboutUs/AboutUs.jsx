@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class AboutUs extends Component {
     render(){
@@ -15,9 +16,11 @@ class AboutUs extends Component {
                         On even feet time have an no at. Relation so in confined smallest children unpacked delicate. Why sir end believe
                         uncivil respect.
                     </center>
+                    <Link to='/AboutUsPage'>
                     <button className="btn">
                         READ MORE
                     </button>
+                    </Link>
                 </div>
             </React.Fragment>
         )
