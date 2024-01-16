@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description');
             $table->float('price');
             $table->integer('stock')->default(0);
+            $table->string('image_url')->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

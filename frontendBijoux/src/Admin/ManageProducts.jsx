@@ -11,11 +11,30 @@ const [currentView, setCurrentView] = useState("list");
 const handleViewChange = (view) => {
     setCurrentView(view);
 };
+const getButtonStyles = (view) => {
+    const baseStyles = {
+        color: "#fff",
+        borderColor: "#34513F",
+    };
+
+    if (currentView === view) {
+        return {
+            ...baseStyles,
+            background: `linear-gradient(to bottom, #34513F, #274A37)`,
+        };
+    } else {
+        return {
+            ...baseStyles,
+            backgroundColor: "#fff",
+            color: "#34513F",
+        };
+    }
+};
     return (
         <>
             <>
                 <ButtonGroup
-                    color="secondary"
+                    color="success"
                     aria-label="medium secondary button group"
                 >
                     <Button
@@ -23,6 +42,7 @@ const handleViewChange = (view) => {
                         variant={
                             currentView === "list" ? "contained" : "outlined"
                         }
+                        sx={getButtonStyles("list")}
                     >
                         List Products
                     </Button>
@@ -31,14 +51,12 @@ const handleViewChange = (view) => {
                         variant={
                             currentView === "create" ? "contained" : "outlined"
                         }
+                        sx={getButtonStyles("create")}
                     >
                         Create Products
                     </Button>
                 </ButtonGroup>
             </>
-            <Typography variant="h6" gutterBottom>
-                {currentView === "list" ? "List Products" : "Create Product"}
-            </Typography>
             <Grid container spacing={3}>
                 {currentView === "list" ? <ListProducts /> : <CreateProducts />}
             </Grid>
