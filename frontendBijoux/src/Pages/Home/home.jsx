@@ -8,7 +8,7 @@ import AboutUs from "../AboutUs/AboutUs.jsx";
 import NavBar from "./NavBar.jsx";
 export default function Home (){
         return (
-            <React.Fragment>
+            <>
                 <header>
                 <NavBar/>
                 </header>
@@ -20,7 +20,7 @@ export default function Home (){
                     <AboutUs />
                     <CardOffre />
                 </main>
-            </React.Fragment>
+            </>
         );
     }
 

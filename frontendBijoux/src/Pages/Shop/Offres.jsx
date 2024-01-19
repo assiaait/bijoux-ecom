@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+
 import Earring from '../../img/offreDEarring.png';
 import Text from '../../img/text.png'
-class Offres extends Component {
-  render() {
+function Offres () {
     return (
-        <React.Fragment style={{marginBottom:'20px'}}>
+        <div style={{marginBottom:'20px'}}>
             <div className="d-flex column justify-space-between">
                 <div className='cardOffre1 d-flex column'>
                     <img src={Earring} alt="" />
@@ -19,8 +18,8 @@ class Offres extends Component {
                 </div>
             </div>
 
-        </React.Fragment>
+        </div>
     )
   }
-}
+
 export default Offres

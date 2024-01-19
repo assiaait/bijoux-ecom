@@ -18,4 +18,8 @@ class Client extends Authenticatable
     {
         return 'client';
     }
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
 }

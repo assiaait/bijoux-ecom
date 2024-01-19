@@ -3,6 +3,7 @@ import { PhoneAndroid } from '@mui/icons-material'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import Logo from '../../img/Logo-1.png'
+import { Link } from 'react-router-dom';
 class Header2 extends Component {
   render() {
     return (
@@ -20,29 +21,28 @@ class Header2 extends Component {
                   <p className='title pt-1'>+212630012546</p>
                 </a>
               </div>
-              <div>
+              <Link to="/">
                 <img src={Logo} width='80' alt='Logo' />
-              </div>
+              </Link>
               <div className='d-flex column '>
                 <div className='pe-5'>
-                  <a
+                  <Link
                     className='title1 text-decoration-none pt-3 '
-                    href='tel:+212630012546'
                     style={{ color: '#34513f', textAlign: 'center',display:'flex',flexDirection:'column',alignItems:'center' }}
                   >
                     <FavoriteBorderIcon />
                     <p className='title pt-1'>WishList</p>
-                  </a>
+                  </Link>
                 </div>
                 <div>
-                  <a
+                  <Link
                     className='title text-decoration-none pt-3'
-                    href='tel:+212630012546'
+                    to="/checkout"
                     style={{ color: '#34513f', textAlign: 'center',display:'flex',flexDirection:'column',alignItems:'center' }}
                   >
                     <ShoppingBagOutlinedIcon />
                     <p className='title pt-1'>Cart(0)</p>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

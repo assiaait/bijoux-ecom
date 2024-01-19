@@ -16,4 +16,9 @@ class Product extends Model
         'stock',
         'image_url',
     ];
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+    
 }

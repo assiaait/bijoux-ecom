@@ -12,6 +12,10 @@ import AdminDashboard from "./Admin/AdminDashboard.jsx";
 import ManageProducts from "./Admin/ManageProducts.jsx";
 import CreateProducts from "./Admin/forms/CreateProducts.jsx";
 import ListProduct from "./Admin/ListProduct.jsx";
+import Shop from "./Pages/Shop/Shop.jsx";
+import { Contact } from "./Pages/Contact/Contact.jsx";
+import CheckoutPages from "./Pages/checkoutPages/CheckoutPages.jsx";
+import AboutUsPages from "./Pages/AboutUs/AboutUsPages.jsx";
 export const USER_HOME_ROUTE = "/Home";
 export const ROUTE_LOGIN = "/login";
 export const CLIENT_HOME_ROUTE = "/clientHome";
@@ -33,6 +37,18 @@ export const router = createBrowserRouter([
                 element: <Home />,
             },
             {
+                path: "/shop",
+                element: <Shop />,
+            },
+            {
+                path: "/contact",
+                element: <Contact />,
+            },
+            {
+                path: "/AboutUsPage",
+                element: <AboutUsPages />,
+            },
+            {
                 path: "*",
                 element: <NotFound />,
             },
@@ -49,6 +65,10 @@ export const router = createBrowserRouter([
             {
                 path: "/signup",
                 element: <SingUp />,
+            },
+            {
+                path: '/checkout',
+                element: <CheckoutPages />,
             },
         ],
     },
