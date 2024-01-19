@@ -20,6 +20,7 @@ Route::middleware(['auth:sanctum', 'ability:client'])->prefix('client')->group(s
     Route::get('/', function (Request $request) {
         return $request->user();
     });
+    Route::apiResource('products', ProductController::class);
 });
 
 Route::middleware(['auth:sanctum', 'ability:admin'])->prefix('admin')->group(static function () {
@@ -29,6 +30,8 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->prefix('admin')->group(sta
         return $request->user();
     });
 });
+
+Route::apiResource('products', ProductController::class);
 
 
 

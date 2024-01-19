@@ -170,19 +170,14 @@
     color: #a75b43;
     padding-bottom: 30px;
   }
-  .listProduct{
-    margin-left: 5vw;
-  }
   /******************************* debut Product *******************************/
   .product{
     width: 20vw;
     height: 40vh;
-    background-color: #D6E8DA;
-    background-image: url(./img/360-jewelry-photography-blue-ring001-650x650.jpg);
+    padding: 5px;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-    padding: 20px;
   }
   .product>span{
     width: 45px;
@@ -199,6 +194,7 @@
     background-color: #34513f;
     color: #ffffff;
     font-family: 'Inter', sans-serif;
+    padding-right: 15px;
   }
   .cardProduct{
     cursor: pointer;
@@ -246,7 +242,7 @@
     border: none;
     color: #ffffff;
     position: relative;
-    bottom: 120px;
+    bottom: 20px;
   }
   /******************************* fin Product *******************************/
   /******************************* fin Part Shop *******************************/

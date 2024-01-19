@@ -1,0 +1,52 @@
+/* Add these styles to your existing CSS */
+
+/* Adjust the style for the out-of-stock label */
+.product.out-of-stock {
+  background-color: #ff6f61; /* You can customize the color */
+}
+
+/* Style for the Add to Cart button */
+.add-to-cart-button {
+  background-color: #34513f;
+  color: #fff;
+}
+
+.add-to-cart-button:hover {
+  background-color: #a75b43;
+}
+
+/* Style for the product card */
+.card {
+  border: 1px solid #ddd; /* Add a border to the card */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow on hover */
+}
+
+/* Style for the product image */
+.cardMedia {
+  object-fit: cover;
+}
+
+/* Style for the product name */
+.productName {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Style for the product price */
+.productPrice {
+  font-size: 16px;
+  color: #34513f;
+}
+
+/* Style for the out-of-stock label in the card */
+.outOfStockLabel {
+  background-color: #ff6f61;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
