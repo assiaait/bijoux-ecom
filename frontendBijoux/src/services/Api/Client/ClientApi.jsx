@@ -10,7 +10,7 @@ const ClientApi = {
         
     },
     getUser: async() => {
-        return await axiosClient.get('/admin')  
+        return await axiosClient.get('/')  
     }
 }
 export default ClientApi

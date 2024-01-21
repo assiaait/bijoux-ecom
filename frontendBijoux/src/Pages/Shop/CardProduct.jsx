@@ -1,52 +1,147 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
 import { Link } from "react-router-dom";
+import ProductApi from "../../services/Api/ProductApi";
 
-const CardProduct = ({ product }) => {
-    const [isHovered, setIsHovered] = useState(false);
+export default function CardProduct(props) {
+    const [products, setProducts] = useState([]);
+    const apiUrl = import.meta.env.VITE_BACKEND_URL;
+    const [hoveredStates, setHoveredStates] = useState(
+        Array(products.length).fill(false)
+    );
 
-    const handleMouseEnter = () => {
-        setIsHovered(true);
+    const handleMouseEnter = (index) => {
+        setHoveredStates((prev) => {
+            const newHoveredStates = [...prev];
+            newHoveredStates[index] = true;
+            return newHoveredStates;
+        });
     };
 
-    const handleMouseLeave = () => {
-        setIsHovered(false);
+    const handleMouseLeave = (index) => {
+        setHoveredStates((prev) => {
+            const newHoveredStates = [...prev];
+            newHoveredStates[index] = false;
+            return newHoveredStates;
+        });
     };
 
     const handleAddToCart = () => {
-        // Add your "Add to Cart" logic here
         console.log("Product added to cart!");
     };
 
-    return (
-        <div
-            className={`cardProduct ${isHovered ? "hovered" : ""}`}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-        >
-            <div className="product d-flex justify-content-between">
-                <span>-40%</span>
-                <h6 className="pt-1 px-1" style={{ color: "#ffffff" }}>
-                    Out to stock
-                </h6>
-            </div>
-            <div className="pt-3">
-                <h6>{product.name}</h6>
-                <div className="d-flex column prix ">
-                    <p className="">${product.price}</p>
-                </div>
-            </div>
-            {isHovered && (
-                <Link to="/checkout">
-                    <button
-                        className="add-to-cart-button btn-cart-add"
-                        onClick={handleAddToCart}
-                    >
-                        Add to Cart
-                    </button>
-                </Link>
-            )}
-        </div>
-    );
-};
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await ProductApi.All();
+                if (Array.isArray(response.data)) {
+                    setProducts(response.data);
+                } else {
+                    console.error(
+                        "Invalid data structure in the API response:",
+                        response
+                    );
+                    setProducts([]);
+                    setHoveredStates([]);
+                }
+            } catch (error) {
+                console.error("Error fetching products:", error.message);
+                setProducts([]);
+                setHoveredStates([]);
+            }
+        };
 
-export default CardProduct;
+        fetchProducts();
+    }, []);
+
+    return (
+        <main>
+            <div
+                className="container row row-cols-4 gap-3 justify-content-between"
+                style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(4, 1fr)",
+                    gridTemplateRows: "repeat(5, 1fr)",
+                    gridGap: "10px",
+                }}
+            >
+                {products.map((product, index) => (
+                    <div
+                        className={`cardProduct ${
+                            hoveredStates[index] ? "hovered" : ""
+                        }`}
+                        onMouseEnter={() => handleMouseEnter(index)}
+                        onMouseLeave={() => handleMouseLeave(index)}
+                        item
+                        key={product.id}
+                        style={{
+                            gridArea: `${Math.floor(index / 4) + 1} / ${
+                                (index % 4) + 1
+                            } / ${Math.floor(index / 4) + 2} / ${
+                                (index % 4) + 2
+                            }`,
+                            marginLeft: "10px",
+                            height: "50vh",
+                        }}
+                    >
+                        {product.image_url ? (
+                            <div
+                                item
+                                key={product.id}
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                className="product"
+                                component="img"
+                                alt={product.name}
+                                height="140"
+                                style={{
+                                    objectFit: "cover",
+                                    backgroundImage: `url(${apiUrl}${product.image_url})`,
+                                }}
+                            >
+                                <div className="product cardProduct d-flex justify-content-between">
+                                    <span>-40%</span>
+                                    <h6
+                                        className="pt-1 px-1"
+                                        style={{ color: "#ffffff" }}
+                                    >
+                                        Out Of Stock
+                                    </h6>
+                                </div>
+                                <div className="pt-3">
+                                    <h6>{product.name}</h6>
+                                    <div className="d-flex column prix ">
+                                        <p className="">{product.price} MAD</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <Typography variant="body2">
+                                No Image Available
+                            </Typography>
+                        )}
+
+                        {hoveredStates[index] && (
+                            <Link to="/checkout">
+                                <button
+                                    className="add-to-cart-button btn-cart-add"
+                                    onClick={handleAddToCart}
+                                >
+                                    Add to Cart
+                                </button>
+                            </Link>
+                        )}
+                    </div>
+                ))}
+            </div>
+        </main>
+    );
+}

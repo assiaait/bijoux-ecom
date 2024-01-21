@@ -16,6 +16,7 @@ import Shop from "./Pages/Shop/Shop.jsx";
 import { Contact } from "./Pages/Contact/Contact.jsx";
 import CheckoutPages from "./Pages/checkoutPages/CheckoutPages.jsx";
 import AboutUsPages from "./Pages/AboutUs/AboutUsPages.jsx";
+import Checkout from "./Pages/checkoutPages/Checkout.jsx";
 export const USER_HOME_ROUTE = "/Home";
 export const ROUTE_LOGIN = "/login";
 export const CLIENT_HOME_ROUTE = "/clientHome";
@@ -66,10 +67,6 @@ export const router = createBrowserRouter([
                 path: "/signup",
                 element: <SingUp />,
             },
-            {
-                path: '/checkout',
-                element: <CheckoutPages />,
-            },
         ],
     },
     {
@@ -78,6 +75,15 @@ export const router = createBrowserRouter([
             {
                 path: CLIENT_HOME_ROUTE,
                 element: <ClientHome />,
+            },
+            {
+                path: '/cart',
+                element: <CheckoutPages />,
+            },
+            
+            {
+                path: '/checkout',
+                element: <CheckoutPages />,
             },
         ],
     },

@@ -9,6 +9,11 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Link } from "react-router-dom";
 import ProductApi from "../../services/Api/ProductApi";
+import axios from "axios";
+import { axiosClient } from "../../api/axios";
+import swal from 'sweetalert';
+
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 export default function PartShop(props) {
     const [products, setProducts] = useState([]);
@@ -16,6 +21,8 @@ export default function PartShop(props) {
     const [hoveredStates, setHoveredStates] = useState(
         Array(products.length).fill(false)
     );
+    const [product, setProduct] = useState([]);
+    const [quantity,setQuantity] =useState(1);
 
     const handleMouseEnter = (index) => {
         setHoveredStates((prev) => {
@@ -23,6 +30,7 @@ export default function PartShop(props) {
             newHoveredStates[index] = true;
             return newHoveredStates;
         });
+        setProduct(products[index]);
     };
 
     const handleMouseLeave = (index) => {
@@ -33,8 +41,25 @@ export default function PartShop(props) {
         });
     };
 
-    const handleAddToCart = () => {
-        console.log("Product added to cart!");
+    const submitAddToCart = async (e) => {
+        e.preventDefault();
+        console.log('Product ID:', product.id); 
+        const data = {
+            product_id : product.id,
+            product_qty : quantity,
+        }
+
+        await axiosClient.post(`${apiUrl}/api/client/add-to-cart`, data).then(res=>{
+            if(res.data.status === 201){
+                swal("Success",res.data.message,"success");
+            }else if (res.data.status === 409) {
+                swal("Success",res.data.message,"success");
+            }else if (res.data.status === 401) {
+                swal("Error",res.data.message,"error");
+            }else if (res.data.status === 404) {
+                swal("Warning",res.data.message,"warning");
+            }
+        })
     };
 
     useEffect(() => {
@@ -143,12 +168,14 @@ export default function PartShop(props) {
                             >
                                 <div className="product cardProduct d-flex justify-content-between">
                                     <span>-40%</span>
-                                    <h6
-                                        className="pt-1 px-1"
-                                        style={{ color: "#ffffff" }}
-                                    >
-                                        Out Of Stock
-                                    </h6>
+                                    {product.stock === 0 && (
+                                        <h6
+                                            className="pt-1 px-1"
+                                            style={{ color: "#ffffff" }}
+                                        >
+                                            Out Of Stock
+                                        </h6>
+                                    )}
                                 </div>
                                 <div className="pt-3">
                                     <h6>{product.name}</h6>
@@ -164,10 +191,10 @@ export default function PartShop(props) {
                         )}
 
                         {hoveredStates[index] && (
-                            <Link to="/checkout">
+                            <Link>
                                 <button
                                     className="add-to-cart-button btn-cart-add"
-                                    onClick={handleAddToCart}
+                                    onClick={submitAddToCart}
                                 >
                                     Add to Cart
                                 </button>
@@ -176,101 +203,6 @@ export default function PartShop(props) {
                     </div>
                 ))}
             </div>
-            {/* <Container sx={{ py: 8 }} maxWidth="md">
-                <Grid container spacing={4}>
-                    {products.map((product) => (
-                        <Grid item key={product.id} xs={12} sm={6} md={4}>
-                            <Card
-                                sx={{
-                                    height: "100%",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    border: "1px solid #ddd",
-                                    borderRadius: "8px",
-                                    overflow: "hidden",
-                                    ":hover": {
-                                        boxShadow:
-                                            "0 4px 8px rgba(0, 0, 0, 0.1)",
-                                    },
-                                }}
-                            >
-                                {product.image_url ? (
-                                    <CardMedia
-                                        component="img"
-                                        alt={product.name}
-                                        height="140"
-                                        src={`${apiUrl}${product.image_url}`}
-                                        style={{
-                                            objectFit: "cover",
-                                        }}
-                                    />
-                                ) : (
-                                    <Typography variant="body2">
-                                        No Image Available
-                                    </Typography>
-                                )}
-                                <CardContent sx={{ flexGrow: 1 }}>
-                                    <div
-                                        className={`product ${
-                                            product.stock === 0
-                                                ? "out-of-stock"
-                                                : ""
-                                        }`}
-                                    >
-                                        {product.stock > 0 && <span>-40%</span>}
-                                        {product.stock === 0 && (
-                                            <h6
-                                                className="pt-1 px-1"
-                                                style={{ color: "#ffffff" }}
-                                            >
-                                                Out Of Stock
-                                            </h6>
-                                        )}
-                                    </div>
-                                    <div className="pt-3">
-                                        <Typography
-                                            variant="h6"
-                                            style={{
-                                                fontSize: "18px",
-                                                fontWeight: "bold",
-                                            }}
-                                        >
-                                            {product.name}
-                                        </Typography>
-                                        <div className="d-flex column prix">
-                                            <Typography
-                                                style={{
-                                                    fontSize: "16px",
-                                                    color: "#34513f",
-                                                }}
-                                            >
-                                                ${product.price.toFixed(2)}
-                                            </Typography>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                                <CardActions>
-                                    {product.stock > 0 && (
-                                        <Link to="/checkout">
-                                            <Button
-                                                size="small"
-                                                className="add-to-cart-button"
-                                                onClick={() =>
-                                                    console.log(
-                                                        "Product added to cart!"
-                                                    )
-                                                }
-                                            >
-                                                Add to Cart
-                                            </Button>
-                                        </Link>
-                                    )}
-                                </CardActions>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
-            </Container> */}
         </main>
     );
 }
