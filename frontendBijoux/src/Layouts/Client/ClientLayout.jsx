@@ -8,7 +8,7 @@ import { useUserContext } from "../../context/UserContext";
 import ClientApi from "../../services/Api/Client/ClientApi";
 import { ROUTE_LOGIN } from "../../router";
 
-export default function GuestLayout() {
+export default function ClientLayout() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true)
     const {
@@ -18,6 +18,7 @@ export default function GuestLayout() {
         logout: contextLogout,
         user,
     } = useUserContext();
+    const [cart, setCart] = useState([]);
     useEffect(() => {
         if (authenticated === true) {
             setIsLoading(false)
@@ -25,6 +26,7 @@ export default function GuestLayout() {
                 .then(({ data }) => {
                     setUser(data);
                     setAuthenticated(true);
+                    setCart(data.cart || []);
                 })
                 .catch((error) => {
                     console.error("Error fetching user:", error);
@@ -67,11 +69,10 @@ export default function GuestLayout() {
                         <hr />
                     </div>
                 </div>
-                <Header2 />
+                <Header2 cart={cart} />
             </header>
             <main>
                 <Outlet />
-                {user.name}
             </main>
             <footer>
                 <Footer />

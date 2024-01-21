@@ -9,6 +9,11 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Link } from "react-router-dom";
 import ProductApi from "../../services/Api/ProductApi";
+import axios from "axios";
+import { axiosClient } from "../../api/axios";
+import swal from 'sweetalert';
+
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 export default function PartShop(props) {
     const [products, setProducts] = useState([]);
@@ -16,6 +21,8 @@ export default function PartShop(props) {
     const [hoveredStates, setHoveredStates] = useState(
         Array(products.length).fill(false)
     );
+    const [product, setProduct] = useState([]);
+    const [quantity,setQuantity] =useState(1);
 
     const handleMouseEnter = (index) => {
         setHoveredStates((prev) => {
@@ -23,6 +30,7 @@ export default function PartShop(props) {
             newHoveredStates[index] = true;
             return newHoveredStates;
         });
+        setProduct(products[index]);
     };
 
     const handleMouseLeave = (index) => {
@@ -33,8 +41,25 @@ export default function PartShop(props) {
         });
     };
 
-    const handleAddToCart = () => {
-        console.log("Product added to cart!");
+    const submitAddToCart = async (e) => {
+        e.preventDefault();
+        console.log('Product ID:', product.id); 
+        const data = {
+            product_id : product.id,
+            product_qty : quantity,
+        }
+
+        await axiosClient.post(`${apiUrl}/api/client/add-to-cart`, data).then(res=>{
+            if(res.data.status === 201){
+                swal("Success",res.data.message,"success");
+            }else if (res.data.status === 409) {
+                swal("Success",res.data.message,"success");
+            }else if (res.data.status === 401) {
+                swal("Error",res.data.message,"error");
+            }else if (res.data.status === 404) {
+                swal("Warning",res.data.message,"warning");
+            }
+        })
     };
 
     useEffect(() => {
@@ -143,12 +168,14 @@ export default function PartShop(props) {
                             >
                                 <div className="product cardProduct d-flex justify-content-between">
                                     <span>-40%</span>
-                                    <h6
-                                        className="pt-1 px-1"
-                                        style={{ color: "#ffffff" }}
-                                    >
-                                        Out Of Stock
-                                    </h6>
+                                    {product.stock === 0 && (
+                                        <h6
+                                            className="pt-1 px-1"
+                                            style={{ color: "#ffffff" }}
+                                        >
+                                            Out Of Stock
+                                        </h6>
+                                    )}
                                 </div>
                                 <div className="pt-3">
                                     <h6>{product.name}</h6>
@@ -164,10 +191,10 @@ export default function PartShop(props) {
                         )}
 
                         {hoveredStates[index] && (
-                            <Link to="/checkout">
+                            <Link>
                                 <button
                                     className="add-to-cart-button btn-cart-add"
-                                    onClick={handleAddToCart}
+                                    onClick={submitAddToCart}
                                 >
                                     Add to Cart
                                 </button>
@@ -176,7 +203,6 @@ export default function PartShop(props) {
                     </div>
                 ))}
             </div>
-            
         </main>
     );
 }

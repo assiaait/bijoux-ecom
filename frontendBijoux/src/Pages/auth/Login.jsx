@@ -8,26 +8,7 @@ function Login() {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const { login, setAuthenticated, setToken } = useUserContext();
-    // const navigate = useNavigate();
-
-    // const handleLogin = async values => {
-    //     // event.preventDefault();
-
-    //     await axiosClient.get("/sanctum/csrf-cookie");
-    //     const data = await axiosClient.post("/login", values);
-    //     navigate(USER_HOME_ROUTE);
-    //     console.log(data);
-    // };
-
-    // const onSubmit = async (values,event) => {
-    //     event.preentDefaults();
-    //     await axiosClient.get("/sanctum/csrf-cookie");
-    //     const data = await axiosClient.post("/login", values);
-    //     if (data.status === 204) {
-    //         navigate(USER_HOME_ROUTE);
-    //     }
-    //     console.log(data);
-    // };
+  
 
     const onSumbit = async (values) => {
         await login(values.email, values.password).then((values) => {
@@ -36,11 +17,6 @@ function Login() {
                 setToken(values.data.token);
                 setAuthenticated(true);
                 const { role } = values.data.user;
-                // if (role == "client") {
-                //     navigate(CLIENT_HOME_ROUTE);
-                // } else if (role == "admin") {
-                //     navigate(ADMIN_DASHBOARD_ROUTE);
-                // }
                 switch (role) {
                     case 'client':
                         navigate(CLIENT_HOME_ROUTE);
@@ -49,27 +25,9 @@ function Login() {
                         navigate(ADMIN_DASHBOARD_ROUTE);
                         break;
                 }
-                //navigate(CLIENT_HOME_ROUTE);
+                
             }
         });
-        // // Récupérer le jeton CSRF avant la requête POST
-        // const csrf = await axiosClient.get("/sanctum/csrf-cookie");
-
-        // // Effectuer la requête POST pour la connexion
-        // const data = await axiosClient.post('/login', values).then(
-        //     (value) => {
-        //         // Naviguer vers la page d'accueil de l'utilisateur
-        //         if (value.status === 204) {
-        //             window.localStorage.setItem('ACCESS_TOKEN', 'test');
-        //             navigate(CLIENT_HOME_ROUTE);
-        //         console.log(data);
-        //         console.log(csrf);
-        //         }
-        //     }
-        // ).catch( (error) =>{
-        //     console.log(error)
-        //  })
-        //  console.log(csrf);
     };
 
     return (

@@ -6,9 +6,13 @@ import AsideCategories from "./AsideCategories";
 import ProductApi from "../../services/Api/ProductApi";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
+import { axiosClient } from "../../api/axios";
+import swal from 'sweetalert'
 
 function Shop(props) {
     const [products, setProducts] = useState([]);
+    const [product, setProduct] = useState([]);
+    const [quantity,setQuantity] =useState(1);
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
     const [hoveredStates, setHoveredStates] = useState(
         Array(products.length).fill(false)
@@ -20,6 +24,8 @@ function Shop(props) {
             newHoveredStates[index] = true;
             return newHoveredStates;
         });
+        
+        setProduct(products[index]);
     };
 
     const handleMouseLeave = (index) => {
@@ -30,8 +36,25 @@ function Shop(props) {
         });
     };
 
-    const handleAddToCart = () => {
-        console.log("Product added to cart!");
+    const submitAddToCart = async (e) => {
+        e.preventDefault();
+        console.log('Product ID:', product.id); 
+        const data = {
+            product_id : product.id,
+            product_qty : quantity,
+        }
+
+        await axiosClient.post(`${apiUrl}/api/client/add-to-cart`, data).then(res=>{
+            if(res.data.status === 201){
+                swal("Success",res.data.message,"success");
+            }else if (res.data.status === 409) {
+                swal("Success",res.data.message,"success");
+            }else if (res.data.status === 401) {
+                swal("Error",res.data.message,"error");
+            }else if (res.data.status === 404) {
+                swal("Warning",res.data.message,"warning");
+            }
+        })
     };
 
     useEffect(() => {
@@ -207,14 +230,16 @@ function Shop(props) {
                                             >
                                                 <div className="product cardProduct d-flex justify-content-between">
                                                     <span>-40%</span>
-                                                    <h6
-                                                        className="pt-1 px-1"
-                                                        style={{
-                                                            color: "#ffffff",
-                                                        }}
-                                                    >
-                                                        Out Of Stock
-                                                    </h6>
+                                                    {product.stock === 0 && (
+                                                        <h6
+                                                            className="pt-1 px-1"
+                                                            style={{
+                                                                color: "#ffffff",
+                                                            }}
+                                                        >
+                                                            Out Of Stock
+                                                        </h6>
+                                                    )}
                                                 </div>
                                                 <div className="pt-3">
                                                     <h6>{product.name}</h6>
@@ -232,10 +257,10 @@ function Shop(props) {
                                         )}
 
                                         {hoveredStates[index] && (
-                                            <Link to="/checkout">
+                                            <Link>
                                                 <button
                                                     className="add-to-cart-button btn-cart-add"
-                                                    onClick={handleAddToCart}
+                                                    onClick={submitAddToCart}
                                                 >
                                                     Add to Cart
                                                 </button>

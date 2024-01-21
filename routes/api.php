@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,10 @@ Route::middleware(['auth:sanctum', 'ability:client'])->prefix('client')->group(s
         return $request->user();
     });
     Route::apiResource('products', ProductController::class);
+    Route::post('add-to-cart', [CartController::class, 'addtocart']);
+    Route::get('cart', [CartController::class, 'viewCart']);
+    Route::put('cart-updatequantity/{cart_id}/{scope}',[CartController::class, 'updatequantity']);
+    Route::delete('delete-cartitem/{cart_id}', [CartController::class, 'deleteCartitem']);
 });
 
 Route::middleware(['auth:sanctum', 'ability:admin'])->prefix('admin')->group(static function () {
@@ -29,6 +34,9 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->prefix('admin')->group(sta
     Route::get('/', function (Request $request) {
         return $request->user();
     });
+});
+Route::get('/', function (Request $request) {
+    return $request->user();
 });
 
 Route::apiResource('products', ProductController::class);
