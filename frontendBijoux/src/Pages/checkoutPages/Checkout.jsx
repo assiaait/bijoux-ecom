@@ -23,7 +23,7 @@ function Checkout() {
         streetaddress: "",
         streetaddressoptional: "",
         city: "",
-        stateContry: "",
+        state_contry: "",
         zip: "",
         phone: "",
         email: "",
@@ -40,7 +40,7 @@ function Checkout() {
                 streetaddress,
                 streetaddressoptional,
                 city,
-                stateContry,
+                state_contry,
                 zip,
                 phone,
                 email,
@@ -55,7 +55,7 @@ function Checkout() {
             formDataToSend.append("streetaddress", streetaddress);
             formDataToSend.append("streetaddressoptional", streetaddressoptional);
             formDataToSend.append("city", city);
-            formDataToSend.append("stateContry", stateContry);
+            formDataToSend.append("state_contry", state_contry);
             formDataToSend.append("zip", zip);
             formDataToSend.append("phone", phone);
             formDataToSend.append("email", email);
@@ -75,7 +75,7 @@ function Checkout() {
                     streetaddress: "",
                     streetaddressoptional: "",
                     city: "",
-                    stateContry: "",
+                    state_contry: "",
                     zip: "",
                     phone: "",
                     email: "",
@@ -432,13 +432,13 @@ function Checkout() {
                         <TextField
                             id="standard-hidden-label-normal"
                             variant="standard"
-                            name="stateContry"
+                            name="state_contry"
                             type="text"
-                            value={formData.stateContry}
+                            value={formData.state_contry}
                             onChange={(e) =>
                                 setFormData({
                                     ...formData,
-                                    stateContry: e.target.value,
+                                    state_contry: e.target.value,
                                 })
                             }
                         />
