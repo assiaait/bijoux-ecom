@@ -1,28 +1,99 @@
 import { useEffect, useState } from "react";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import ConfirmationNumberOutlinedIcon from "@mui/icons-material/ConfirmationNumberOutlined";
-import {
-    FormControl,
-    FormControlLabel,
-    FormHelperText,
-    Radio,
-    RadioGroup,
-    TextField,
-} from "@mui/material";
+import { FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material";
 import FormGroup from "@mui/material/FormGroup";
 import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
-import ImgProduct from "../../img/Ring1.jpg";
 import CardBank from "./CardBank";
 import { axiosClient } from "../../api/axios";
 import swal from "sweetalert";
 import { Link } from "react-router-dom";
+import OrderApi from "../../services/Api/OrderApi";
 
 function Checkout() {
-    const [quantity, setQuantity] = useState(1);
+    const [successMessage, setSuccessMessage] = useState(null);
     const [cart, setCart] = useState([]);
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
     var totalCartPrice = 0;
+    const [formData, setFormData] = useState({
+        firstname: "",
+        lastname: "",
+        companyname: "",
+        streetaddress: "",
+        streetaddressoptional: "",
+        city: "",
+        stateContry: "",
+        zip: "",
+        phone: "",
+        email: "",
+        ordernotes: "",
+    });
+    const onSubmit = async (event) => {
+        event.preventDefault();
+    
+        try {
+            const {
+                firstname,
+                lastname,
+                companyname,
+                streetaddress,
+                streetaddressoptional,
+                city,
+                stateContry,
+                zip,
+                phone,
+                email,
+                ordernotes,
+            } = formData;
+    
+            // Create FormData object and append data
+            const formDataToSend = new FormData();
+            formDataToSend.append("firstname", firstname);
+            formDataToSend.append("lastname", lastname);
+            formDataToSend.append("companyname", companyname);
+            formDataToSend.append("streetaddress", streetaddress);
+            formDataToSend.append("streetaddressoptional", streetaddressoptional);
+            formDataToSend.append("city", city);
+            formDataToSend.append("stateContry", stateContry);
+            formDataToSend.append("zip", zip);
+            formDataToSend.append("phone", phone);
+            formDataToSend.append("email", email);
+            formDataToSend.append("ordernotes", ordernotes);
+    
+            // Make API call
+            const response = await axiosClient.post("/client/place-order", formDataToSend);
+    
+            if (response.data.status === 200) {
+                swal("Order placed successfully", response.data.message, "success");
+    
+                // Reset form data
+                setFormData({
+                    firstname: "",
+                    lastname: "",
+                    companyname: "",
+                    streetaddress: "",
+                    streetaddressoptional: "",
+                    city: "",
+                    stateContry: "",
+                    zip: "",
+                    phone: "",
+                    email: "",
+                    ordernotes: "",
+                });
+    
+                // Optionally, you can set success message here or redirect to another page.
+            } else if (response.data.status === 422) {
+                swal("All fields are mandatory", "", "error");
+            } else {
+                swal("Failed to place order", response.data.message || "Unknown error", "error");
+            }
+        } catch (error) {
+            console.error("Error submitting order:", error);
+            swal("Error", "Failed to place order. Please try again.", "error");
+        }
+    };
+    
     useEffect(() => {
         const fetchData = async () => {
             let isMounted = true;
@@ -56,6 +127,7 @@ function Checkout() {
 
         fetchData();
     }, []);
+
     return (
         <div
             style={{ width: "100vw", paddingLeft: "5vw", paddingBottom: "5vh" }}
@@ -90,10 +162,7 @@ function Checkout() {
                     <p className="pt-3 px-2" style={{ color: "#868686" }}>
                         RETURNING CUSTOMER?{" "}
                     </p>
-                    <Link
-                        
-                        style={{ color: "#181818", textDecoration: "none" }}
-                    >
+                    <Link style={{ color: "#181818", textDecoration: "none" }}>
                         {" "}
                         CLICK HERE TO LOGIN{" "}
                     </Link>
@@ -153,9 +222,20 @@ function Checkout() {
                             </span>
                         </label>
                         <TextField
-                            hiddenLabel
-                            id="standard-hidden-label-normal"
+                            required
+                            id="firstname"
+                            name="firstname"
+                            type="name"
+                            fullWidth
+                            autoComplete="given-name"
                             variant="standard"
+                            value={formData.firstname}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    firstname: e.target.value,
+                                })
+                            }
                         />
                         <label
                             className="mt-5"
@@ -173,9 +253,19 @@ function Checkout() {
                             </span>
                         </label>
                         <TextField
-                            hiddenLabel
-                            id="standard-hidden-label-normal"
+                            id="lastname"
                             variant="standard"
+                            name="lastname"
+                            fullWidth
+                            autoComplete="given-name"
+                            type="name"
+                            value={formData.lastname}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    lastname: e.target.value,
+                                })
+                            }
                         />
                         <label
                             className="mt-5"
@@ -185,9 +275,19 @@ function Checkout() {
                             Company name (optional)
                         </label>
                         <TextField
-                            hiddenLabel
-                            id="standard-hidden-label-normal"
+                            id="companyname"
                             variant="standard"
+                            name="companyname"
+                            type="text"
+                            fullWidth
+                            autoComplete="given-name"
+                            value={formData.companyname}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    companyname: e.target.value,
+                                })
+                            }
                         />
                         <label
                             className="mt-5"
@@ -255,17 +355,35 @@ function Checkout() {
                         </label>
                         <TextField
                             className="mt-4"
-                            hiddenLabel
-                            id="standard-hidden-label-normal"
+                            id="streetaddress"
                             variant="standard"
                             placeholder="House number and street name"
+                            name="streetaddress"
+                            type="text"
+                            fullWidth
+                            autoComplete="given-name"
+                            value={formData.streetaddress}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    streetaddress: e.target.value,
+                                })
+                            }
                         />
                         <TextField
                             className="mt-5"
-                            hiddenLabel
-                            id="standard-hidden-label-normal"
+                            id="streetaddressoptional"
                             variant="standard"
                             placeholder="Apartment, suite, unit, etc. (optional)"
+                            name="streetaddressoptional"
+                            type="text"
+                            value={formData.streetaddressoptional}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    streetaddressoptional: e.target.value,
+                                })
+                            }
                         />
                         <label
                             className="mt-5"
@@ -283,9 +401,17 @@ function Checkout() {
                             </span>
                         </label>
                         <TextField
-                            hiddenLabel
                             id="standard-hidden-label-normal"
                             variant="standard"
+                            name="city"
+                            type="text"
+                            value={formData.city}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    city: e.target.value,
+                                })
+                            }
                         />
 
                         <label
@@ -304,9 +430,17 @@ function Checkout() {
                             </span>
                         </label>
                         <TextField
-                            hiddenLabel
                             id="standard-hidden-label-normal"
                             variant="standard"
+                            name="stateContry"
+                            type="text"
+                            value={formData.stateContry}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    stateContry: e.target.value,
+                                })
+                            }
                         />
                         <label
                             className="mt-5"
@@ -324,9 +458,17 @@ function Checkout() {
                             </span>
                         </label>
                         <TextField
-                            hiddenLabel
                             id="standard-hidden-label-normal"
                             variant="standard"
+                            name="zip"
+                            type="text"
+                            value={formData.zip}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    zip: e.target.value,
+                                })
+                            }
                         />
                         <label
                             className="mt-5"
@@ -344,9 +486,17 @@ function Checkout() {
                             </span>
                         </label>
                         <TextField
-                            hiddenLabel
                             id="standard-hidden-label-normal"
                             variant="standard"
+                            name="phone"
+                            type="text"
+                            value={formData.phone}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    phone: e.target.value,
+                                })
+                            }
                         />
                         <label
                             className="mt-5"
@@ -364,9 +514,17 @@ function Checkout() {
                             </span>
                         </label>
                         <TextField
-                            hiddenLabel
                             id="standard-hidden-label-normal"
                             variant="standard"
+                            name="email"
+                            type="text"
+                            value={formData.email}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    email: e.target.value,
+                                })
+                            }
                         />
                         <label
                             className="mt-5"
@@ -378,7 +536,6 @@ function Checkout() {
                         <textarea
                             className="mt-4"
                             placeholder="Notes about your order, e.g. special notes for delivery."
-                            hiddenLabel
                             id="standard-hidden-label-normal"
                             variant="standard"
                             style={{
@@ -386,6 +543,15 @@ function Checkout() {
                                 borderBottom: "1px solid #181818",
                                 outline: "none",
                             }}
+                            name="ordernotes"
+                            type="text"
+                            value={formData.ordernotes}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    ordernotes: e.target.value,
+                                })
+                            }
                         ></textarea>
                     </FormGroup>
                 </div>
@@ -588,6 +754,7 @@ function Checkout() {
                             fontWeight: "400",
                             letterSpacing: ".1em",
                         }}
+                        onClick={onSubmit}
                     >
                         Place order
                     </button>
