@@ -14,7 +14,7 @@ import FormControl from "@mui/material/FormControl";
 import { axiosClient } from "../../api/axios";
 import swal from "sweetalert";
 import Header2 from "../Home/Header2";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 function ShoppingCarts() {
     const [quantity, setQuantity] = useState(1);
@@ -110,6 +110,18 @@ function ShoppingCarts() {
 
     return (
         <>
+            <h1
+                style={{
+                    textAlign: "center",
+                    paddingRight: "5vw",
+                    fontSize: "34px",
+                    fontWeight: "400",
+                    lineHeight: "40px",
+                    letterSpacing: "0.04em",
+                }}
+            >
+                Shopping Cart
+            </h1>
             <section style={{ width: "100vw", padding: "3vw" }}>
                 <article style={{ width: "60vw", height: "100vh" }}>
                     <TableContainer component={Paper}>
