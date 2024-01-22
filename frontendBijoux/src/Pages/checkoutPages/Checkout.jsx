@@ -1,25 +1,77 @@
+import { useEffect, useState } from "react";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import ConfirmationNumberOutlinedIcon from "@mui/icons-material/ConfirmationNumberOutlined";
-import { FormControl, FormControlLabel, FormHelperText, Link, Radio, RadioGroup, TextField} from "@mui/material";
+import {
+    FormControl,
+    FormControlLabel,
+    FormHelperText,
+    Radio,
+    RadioGroup,
+    TextField,
+} from "@mui/material";
 import FormGroup from "@mui/material/FormGroup";
 import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import ImgProduct from "../../img/Ring1.jpg";
 import CardBank from "./CardBank";
-
-function createData(nameProduct, img, price, quantite, subTotal) {
-    return { nameProduct, img, price, quantite, subTotal };
-}
-
-const rows = [
-    createData("Sharm Club Bracelet - Pink", "all 1.png", 100.0, 1, 100.0),
-    createData("Bold Hoops", "all 1.png", 120.0, 2, 240.0),
-];
+import { axiosClient } from "../../api/axios";
+import swal from "sweetalert";
+import { Link } from "react-router-dom";
 
 function Checkout() {
-    
+    const [quantity, setQuantity] = useState(1);
+    const [cart, setCart] = useState([]);
+    const apiUrl = import.meta.env.VITE_BACKEND_URL;
+    var totalCartPrice = 0;
+    useEffect(() => {
+        const fetchData = async () => {
+            let isMounted = true;
+            try {
+                const res = await axiosClient.get("/client/cart");
+                if (isMounted) {
+                    if (
+                        res.data &&
+                        res.data.hasOwnProperty("status") &&
+                        res.data.hasOwnProperty("cart")
+                    ) {
+                        if (res.data.status === 200) {
+                            setCart(res.data.cart);
+                        } else if (res.data.status === 401) {
+                            const errorMessage =
+                                res.data.message || "Unauthorized";
+                            swal("Warning", errorMessage, "error");
+                        } else {
+                            console.error("Invalid response format:", res);
+                        }
+                    } else {
+                        console.error("Invalid response format:", res);
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                isMounted && (isMounted = false);
+            }
+        };
+
+        fetchData();
+    }, []);
     return (
-        <>
+        <div
+            style={{ width: "100vw", paddingLeft: "5vw", paddingBottom: "5vh" }}
+        >
+            <h1
+                style={{
+                    textAlign: "center",
+                    paddingRight: "5vw",
+                    fontSize: "34px",
+                    fontWeight: "400",
+                    lineHeight: "40px",
+                    letterSpacing: "0.04em",
+                }}
+            >
+                Checkout
+            </h1>
             <div className="d-flex">
                 <div
                     className="d-flex me-5 justify-content-center align-items-center"
@@ -39,7 +91,7 @@ function Checkout() {
                         RETURNING CUSTOMER?{" "}
                     </p>
                     <Link
-                        href="#"
+                        
                         style={{ color: "#181818", textDecoration: "none" }}
                     >
                         {" "}
@@ -357,43 +409,53 @@ function Checkout() {
                     >
                         Product
                     </h3>
-                    {rows.map((row) => (
-                        <div className="d-flex justify-content-between mt-5">
-                            <div className="d-flex column">
-                                <img
-                                    src={ImgProduct}
-                                    width="55"
-                                    height="55"
-                                    style={{ border: "1px solid #e8e8e8" }}
-                                    alt=""
-                                />
-                                <div
+                    {cart.map((item, idx) => {
+                        totalCartPrice += item.product.price * item.product_qty;
+
+                        return (
+                            <div
+                                className="d-flex justify-content-between mt-5"
+                                key={idx}
+                            >
+                                <div className="d-flex column">
+                                    <img
+                                        src={`${apiUrl}${item.product.image_url}`}
+                                        width="55"
+                                        height="55"
+                                        style={{ border: "1px solid #e8e8e8" }}
+                                        alt=""
+                                    />
+                                    <div
+                                        style={{
+                                            paddingLeft: "10px",
+                                            color: "#000",
+                                            textTransform: "uppercase",
+                                            wordBreak: "break-word",
+                                            fontSize: "12px",
+                                        }}
+                                    >
+                                        <p>{item.product.name}</p>
+                                        <strong>
+                                            QTY : {item.product_qty}
+                                        </strong>
+                                    </div>
+                                </div>
+                                <p
                                     style={{
-                                        paddingLeft: "10px",
-                                        color: "#000",
-                                        textTransform: "uppercase",
-                                        wordBreak: "break-word",
-                                        fontSize: "12px",
+                                        fontFamily: "Uchen Regular",
+                                        fontSize: "0.75rem",
+                                        fontWeight: "500",
+                                        lineHeight: "1.75",
+                                        color: "#868686",
+                                        textAlign: "left",
                                     }}
                                 >
-                                    <p>{row.nameProduct}</p>
-                                    <strong>QTY : {row.quantite}</strong>
-                                </div>
+                                    {item.product.price * item.product_qty} MAD
+                                </p>
                             </div>
-                            <p
-                                style={{
-                                    fontFamily: "Uchen Regular",
-                                    fontSize: "0.75rem",
-                                    fontWeight: "500",
-                                    lineHeight: "1.75",
-                                    color: "#868686",
-                                    textAlign: "left",
-                                }}
-                            >
-                                {row.price} MAD
-                            </p>
-                        </div>
-                    ))}
+                        );
+                    })}
+
                     <hr className="mt-5 mb-4" />
                     <div className="d-flex justify-content-between">
                         <p
@@ -416,7 +478,7 @@ function Checkout() {
                                 textAlign: "left",
                             }}
                         >
-                            340.00 MAD
+                            {totalCartPrice} MAD
                         </p>
                     </div>
                     <hr className="mt-3 mb-4" />
@@ -500,7 +562,7 @@ function Checkout() {
                                 textAlign: "left",
                             }}
                         >
-                            340.00 MAD
+                            {totalCartPrice} MAD
                         </p>
                     </div>
                     <div
@@ -531,7 +593,7 @@ function Checkout() {
                     </button>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 export default Checkout;
