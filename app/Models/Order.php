@@ -16,7 +16,7 @@ class Order extends Model
         'streetaddress',
         'streetaddressoptional',
         'city',
-        'stateContry',
+        'state_contry',
         'zip',
         'phone',
         'email',
@@ -27,4 +27,8 @@ class Order extends Model
         'payment_id',
         'payment_mode',
     ];
+
+    public function orderitems(){
+        return $this->hasMany(Orderitems::class, 'order_id', 'id');
+    }
 }
