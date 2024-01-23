@@ -24,6 +24,7 @@ class CheckoutController extends Controller
                 'phone' => 'required|max:191',
                 'email' => 'required|max:191',
                 'ordernotes' => 'required|max:191',
+                'shipping_type' => 'required|max:191',
             ]);
             if ($validator->fails()) {
                 return response()->json([
@@ -46,7 +47,7 @@ class CheckoutController extends Controller
                 $order->phone = $request->phone;
                 $order->email = $request->email;
                 $order->ordernotes = $request->ordernotes;
-                $order->shipping_type = "free";
+                $order->shipping_type = $request->input('shipping_type');
                 $order->payment_mode = "COD";
                 $order->total_amount = 0;
                 $order->save();
@@ -54,6 +55,7 @@ class CheckoutController extends Controller
                 $cart = Cart::where('user_id', $user_id)->get();
 
                 $orderitems = [];
+                $orderTotal = 0;
                 foreach ($cart as $item) {
                     $orderitems[] = [
                         'product_id'=>$item->product_id,
@@ -61,12 +63,14 @@ class CheckoutController extends Controller
                         'price'=>$item->product->price,
                         'price'=>$item->product->price,
                     ];
-
+                    $orderTotal += $item->product_qty * $item->product->price;
                     $item->product->update([
                         'stock'=>$item->product->stock - $item->product_qty
                     ]);
                 }
 
+                $order->total_amount = $orderTotal;
+                $order->save();
                 $order->orderitems()->createMany($orderitems);
                 Cart::destroy($cart);
                 return response()->json([

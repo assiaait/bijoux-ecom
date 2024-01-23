@@ -29,9 +29,15 @@ function Checkout() {
         email: "",
         ordernotes: "",
     });
+    const [shippingType, setShippingType] = useState("flat");
+
+    // Update the state when the user selects a shipping option
+    const handleShippingTypeChange = (event) => {
+        setShippingType(event.target.value);
+    };
     const onSubmit = async (event) => {
         event.preventDefault();
-    
+
         try {
             const {
                 firstname,
@@ -45,28 +51,40 @@ function Checkout() {
                 phone,
                 email,
                 ordernotes,
+                shipping_type,
             } = formData;
-    
+
             // Create FormData object and append data
             const formDataToSend = new FormData();
             formDataToSend.append("firstname", firstname);
             formDataToSend.append("lastname", lastname);
             formDataToSend.append("companyname", companyname);
             formDataToSend.append("streetaddress", streetaddress);
-            formDataToSend.append("streetaddressoptional", streetaddressoptional);
+            formDataToSend.append(
+                "streetaddressoptional",
+                streetaddressoptional
+            );
             formDataToSend.append("city", city);
             formDataToSend.append("state_contry", state_contry);
             formDataToSend.append("zip", zip);
             formDataToSend.append("phone", phone);
             formDataToSend.append("email", email);
             formDataToSend.append("ordernotes", ordernotes);
-    
+            formDataToSend.append("shipping_type", shippingType);
+
             // Make API call
-            const response = await axiosClient.post("/client/place-order", formDataToSend);
-    
+            const response = await axiosClient.post(
+                "/client/place-order",
+                formDataToSend
+            );
+
             if (response.data.status === 200) {
-                swal("Order placed successfully", response.data.message, "success");
-    
+                swal(
+                    "Order placed successfully",
+                    response.data.message,
+                    "success"
+                );
+
                 // Reset form data
                 setFormData({
                     firstname: "",
@@ -80,20 +98,25 @@ function Checkout() {
                     phone: "",
                     email: "",
                     ordernotes: "",
+                    shipping_type: "",
                 });
-    
+
                 // Optionally, you can set success message here or redirect to another page.
             } else if (response.data.status === 422) {
                 swal("All fields are mandatory", "", "error");
             } else {
-                swal("Failed to place order", response.data.message || "Unknown error", "error");
+                swal(
+                    "Failed to place order",
+                    response.data.message || "Unknown error",
+                    "error"
+                );
             }
         } catch (error) {
             console.error("Error submitting order:", error);
             swal("Error", "Failed to place order. Please try again.", "error");
         }
     };
-    
+
     useEffect(() => {
         const fetchData = async () => {
             let isMounted = true;
@@ -672,9 +695,11 @@ function Checkout() {
                                     color: "#868686",
                                     textAlign: "left",
                                 }}
+                                value={shippingType}
+                                onChange={handleShippingTypeChange}
                             >
                                 <FormControlLabel
-                                    value="freeShipping"
+                                    value="free"
                                     control={
                                         <Radio
                                             size="small"
@@ -689,7 +714,7 @@ function Checkout() {
                                     label="Free Shipping"
                                 />
                                 <FormControlLabel
-                                    value="flatRate"
+                                    value="flat"
                                     control={
                                         <Radio
                                             size="small"
