@@ -18,6 +18,8 @@ import CheckoutPages from "./Pages/checkoutPages/CheckoutPages.jsx";
 import AboutUsPages from "./Pages/AboutUs/AboutUsPages.jsx";
 import Checkout from "./Pages/checkoutPages/Checkout.jsx";
 import ShoppingCarts from "./Pages/checkoutPages/ShoppingCarts.jsx";
+import Orders from "./Admin/Orders.jsx";
+import Product from "./Pages/Shop/Product.jsx";
 export const USER_HOME_ROUTE = "/Home";
 export const ROUTE_LOGIN = "/login";
 export const CLIENT_HOME_ROUTE = "/clientHome";
@@ -86,6 +88,10 @@ export const router = createBrowserRouter([
                 path: '/checkout',
                 element: <Checkout />,
             },
+            {
+                path: "/product",
+                element: <Product />,
+            },
         ],
     },
     {
@@ -106,6 +112,10 @@ export const router = createBrowserRouter([
             {
                 path: "/create-product",
                 element: <CreateProducts />,
+            },
+            {
+                path: "/list-order",
+                element: <Orders />,
             },
         ],
     },

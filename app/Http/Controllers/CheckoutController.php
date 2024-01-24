@@ -116,11 +116,19 @@ class CheckoutController extends Controller
                     'message' => "Form validated Successfully",
                 ]);
             }
-        }else{
+        } else {
             return response()->json([
                 'status' => 401,
                 'message' => 'Login to continue'
             ]);
         }
+    }
+    public function getAllOrders()
+    {
+        $orders = Order::all();
+        return response()->json([
+            'status' => 200,
+            'data' => $orders,
+        ]);
     }
 }

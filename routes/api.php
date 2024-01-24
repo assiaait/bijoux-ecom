@@ -24,6 +24,7 @@ Route::middleware(['auth:sanctum', 'ability:client'])->prefix('client')->group(s
         return $request->user();
     });
     Route::apiResource('products', ProductController::class);
+    Route::get('products/{product_id}', [ProductController::class, 'show']);
     Route::post('add-to-cart', [CartController::class, 'addtocart']);
     Route::get('cart', [CartController::class, 'viewCart']);
     Route::put('cart-updatequantity/{cart_id}/{scope}',[CartController::class, 'updatequantity']);
@@ -34,7 +35,7 @@ Route::middleware(['auth:sanctum', 'ability:client'])->prefix('client')->group(s
 
 Route::middleware(['auth:sanctum', 'ability:admin'])->prefix('admin')->group(static function () {
     Route::apiResource('products', ProductController::class);
-
+    Route::get('orders', [CheckoutController::class, 'getAllOrders']);
     Route::get('/', function (Request $request) {
         return $request->user();
     });

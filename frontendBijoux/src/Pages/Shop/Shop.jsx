@@ -5,14 +5,14 @@ import CategorySlide from "./CategorySlide";
 import AsideCategories from "./AsideCategories";
 import ProductApi from "../../services/Api/ProductApi";
 import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { axiosClient } from "../../api/axios";
-import swal from 'sweetalert'
+import swal from "sweetalert";
 
 function Shop(props) {
     const [products, setProducts] = useState([]);
     const [product, setProduct] = useState([]);
-    const [quantity,setQuantity] =useState(1);
+    const [quantity, setQuantity] = useState(1);
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
     const [hoveredStates, setHoveredStates] = useState(
         Array(products.length).fill(false)
@@ -24,7 +24,7 @@ function Shop(props) {
             newHoveredStates[index] = true;
             return newHoveredStates;
         });
-        
+
         setProduct(products[index]);
     };
 
@@ -38,23 +38,25 @@ function Shop(props) {
 
     const submitAddToCart = async (e) => {
         e.preventDefault();
-        console.log('Product ID:', product.id); 
+        console.log("Product ID:", product.id);
         const data = {
-            product_id : product.id,
-            product_qty : quantity,
-        }
+            product_id: product.id,
+            product_qty: quantity,
+        };
 
-        await axiosClient.post(`${apiUrl}/api/client/add-to-cart`, data).then(res=>{
-            if(res.data.status === 201){
-                swal("Success",res.data.message,"success");
-            }else if (res.data.status === 409) {
-                swal("Success",res.data.message,"success");
-            }else if (res.data.status === 401) {
-                swal("Error",res.data.message,"error");
-            }else if (res.data.status === 404) {
-                swal("Warning",res.data.message,"warning");
-            }
-        })
+        await axiosClient
+            .post(`${apiUrl}/api/client/add-to-cart`, data)
+            .then((res) => {
+                if (res.data.status === 201) {
+                    swal("Success", res.data.message, "success");
+                } else if (res.data.status === 409) {
+                    swal("Success", res.data.message, "success");
+                } else if (res.data.status === 401) {
+                    swal("Error", res.data.message, "error");
+                } else if (res.data.status === 404) {
+                    swal("Warning", res.data.message, "warning");
+                }
+            });
     };
 
     useEffect(() => {
@@ -84,6 +86,11 @@ function Shop(props) {
         event.preventDefault();
         console.info("You clicked a breadcrumb.");
     }
+    const handleProductClick = (productId) => {
+        // Use the `navigate` function from `react-router-dom` to navigate to the product page
+        Navigate(`/product/${productId}`);
+    };
+    
     const breadcrumbs = [
         <Link
             underline="hover"
@@ -177,99 +184,121 @@ function Shop(props) {
                                 </ul>
                             </div>
                         </div>
-                        <div className="row row-cols-3 justify-content-between mt-3 mb-2">
-                            <div
-                                className="container row row-cols-4 gap-3 justify-content-between"
-                                style={{
-                                    display: "grid",
-                                    gridTemplateColumns: "repeat(3, 1fr)",
-                                    gridTemplateRows: "repeat(5, 1fr)",
-                                    gridGap: "10px",
-                                }}
-                            >
-                                {products.map((product, index) => (
-                                    <div
-                                        className={`cardProduct ${
-                                            hoveredStates[index]
-                                                ? "hovered"
-                                                : ""
-                                        }`}
-                                        onMouseEnter={() =>
-                                            handleMouseEnter(index)
-                                        }
-                                        onMouseLeave={() =>
-                                            handleMouseLeave(index)
-                                        }
-                                        item
-                                        key={product.id}
-                                        style={{
-                                            gridArea: `${
-                                                Math.floor(index / 3) + 1
-                                            } / ${(index % 3) + 1} / ${
-                                                Math.floor(index / 3) + 2
-                                            } / ${(index % 3) + 2}`,
-                                            marginLeft: "10px",
-                                            height: "50vh",
-                                        }}
-                                    >
-                                        {product.image_url ? (
+                        <Link to={`/product`}>
+                            <div className="row row-cols-3 justify-content-between mt-3 mb-2">
+                                <div
+                                    className="container row row-cols-4 gap-3 justify-content-between"
+                                    style={{
+                                        display: "grid",
+                                        gridTemplateColumns: "repeat(3, 1fr)",
+                                        gridTemplateRows: "repeat(5, 1fr)",
+                                        gridGap: "10px",
+                                    }}
+                                >
+                                    {products.map((product, index) => (
+                                        <Link
+                                            to={`/product/${product.id}`}
+                                            key={product.id}
+                                        >
                                             <div
+                                                className={`cardProduct ${
+                                                    hoveredStates[index]
+                                                        ? "hovered"
+                                                        : ""
+                                                }`}
+                                                onMouseEnter={() =>
+                                                    handleMouseEnter(index)
+                                                }
+                                                onMouseLeave={() =>
+                                                    handleMouseLeave(index)
+                                                }
+                                                onClick={() =>
+                                                    handleProductClick(
+                                                        product.id
+                                                    )
+                                                }
                                                 item
                                                 key={product.id}
-                                                xs={12}
-                                                sm={6}
-                                                md={4}
-                                                className="product"
-                                                component="img"
-                                                alt={product.name}
-                                                height="140"
                                                 style={{
-                                                    objectFit: "cover",
-                                                    backgroundImage: `url(${apiUrl}${product.image_url})`,
+                                                    gridArea: `${
+                                                        Math.floor(index / 3) +
+                                                        1
+                                                    } / ${(index % 3) + 1} / ${
+                                                        Math.floor(index / 3) +
+                                                        2
+                                                    } / ${(index % 3) + 2}`,
+                                                    marginLeft: "10px",
+                                                    height: "50vh",
                                                 }}
                                             >
-                                                <div className="product cardProduct d-flex justify-content-between">
-                                                    <span>-40%</span>
-                                                    {product.stock === 0 && (
-                                                        <h6
-                                                            className="pt-1 px-1"
-                                                            style={{
-                                                                color: "#ffffff",
-                                                            }}
-                                                        >
-                                                            Out Of Stock
-                                                        </h6>
-                                                    )}
-                                                </div>
-                                                <div className="pt-3">
-                                                    <h6>{product.name}</h6>
-                                                    <div className="d-flex column prix ">
-                                                        <p className="">
-                                                            {product.price} MAD
-                                                        </p>
+                                                {product.image_url ? (
+                                                    <div
+                                                        item
+                                                        key={product.id}
+                                                        xs={12}
+                                                        sm={6}
+                                                        md={4}
+                                                        className="product"
+                                                        component="img"
+                                                        alt={product.name}
+                                                        height="140"
+                                                        style={{
+                                                            objectFit: "cover",
+                                                            backgroundImage: `url(${apiUrl}${product.image_url})`,
+                                                        }}
+                                                    >
+                                                        <div className="product cardProduct d-flex justify-content-between">
+                                                            <span>-40%</span>
+                                                            {product.stock ===
+                                                                0 && (
+                                                                <h6
+                                                                    className="pt-1 px-1"
+                                                                    style={{
+                                                                        color: "#ffffff",
+                                                                    }}
+                                                                >
+                                                                    Out Of Stock
+                                                                </h6>
+                                                            )}
+                                                        </div>
+                                                        <div className="pt-3">
+                                                            <h6>
+                                                                {product.name}
+                                                            </h6>
+                                                            <div className="d-flex column prix ">
+                                                                <p className="">
+                                                                    {
+                                                                        product.price
+                                                                    }{" "}
+                                                                    MAD
+                                                                </p>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <Typography variant="body2">
-                                                No Image Available
-                                            </Typography>
-                                        )}
+                                                ) : (
+                                                    <Typography variant="body2">
+                                                        No Image Available
+                                                    </Typography>
+                                                )}
 
-                                        {hoveredStates[index] && (
-                                            <Link>
-                                                <button
-                                                    className="add-to-cart-button btn-cart-add"
-                                                    onClick={submitAddToCart}
-                                                >
-                                                    Add to Cart
-                                                </button>
-                                            </Link>
-                                        )}
-                                    </div>
-                                ))}
+                                                {hoveredStates[index] && (
+                                                    <Link>
+                                                        <button
+                                                            className="add-to-cart-button btn-cart-add"
+                                                            onClick={
+                                                                submitAddToCart
+                                                            }
+                                                        >
+                                                            Add to Cart
+                                                        </button>
+                                                    </Link>
+                                                )}
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        </Link>
                     </article>
                 </section>
             </main>

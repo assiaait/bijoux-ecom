@@ -59,10 +59,21 @@ function Checkout({ total }) {
         const name = target.name;
         const value = target.value;
 
-        setFormData({
-            ...formData,
-            payment_mode,
-        });
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value,
+            payment_mode: payment_mode,
+        }));
+        if (payment_mode === "payPal") {
+            handleClickOpen(); 
+        }
+    };
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
     };
 
     // Update the state when the user selects a shipping option
@@ -189,10 +200,18 @@ function Checkout({ total }) {
                     }
                     break;
                 case "payPal":
+                    axiosClient
+                        .post("/client/place-order", formDataToSend)
+                        .then((res) => {
+                            if (res.data.status === 200) {
+                            } else if (res.data.status === 422) {
+                                swal("All fields are mandetory", "", "error");
+                            }
+                        });
                     break;
                 case "cashOnDelivery":
                     axiosClient
-                        .post("/client/place-order", formDataToSend)
+                        .post("/client/validate-order", formDataToSend)
                         .then((res) => {
                             if (res.data.status === 200) {
                                 swal(
@@ -248,16 +267,7 @@ function Checkout({ total }) {
 
         fetchData();
     }, []);
-    const fetchClientSecret = async () => {
-        try {
-            const response = await axiosClient.post(`/client/validate-order`, {
-                items,
-            });
-            setClientSecret(response.data.clientSecret);
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    
     return (
         <div
             style={{ width: "100vw", paddingLeft: "5vw", paddingBottom: "5vh" }}
@@ -943,6 +953,51 @@ function Checkout({ total }) {
                                         <CheckoutForm />
                                     </Elements>
                                 )}
+                            <Dialog
+                                open={open}
+                                onClose={handleClose}
+                                PaperProps={{
+                                    component: "form",
+                                    onSubmit: (event) => {
+                                        event.preventDefault();
+                                        const formData = new FormData(
+                                            event.currentTarget
+                                        );
+                                        const formJson = Object.fromEntries(
+                                            formData.entries()
+                                        );
+                                        const email = formJson.email;
+                                        console.log(email);
+                                        handleClose();
+                                    },
+                                }}
+                            >
+                                <DialogTitle>Subscribe</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText>
+                                        To subscribe to this website, please
+                                        enter your email address here. We will
+                                        send updates occasionally.
+                                    </DialogContentText>
+                                    <TextField
+                                        autoFocus
+                                        required
+                                        margin="dense"
+                                        id="name"
+                                        name="email"
+                                        label="Email Address"
+                                        type="email"
+                                        fullWidth
+                                        variant="standard"
+                                    />
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleClose}>
+                                        Cancel
+                                    </Button>
+                                    <Button type="submit">Subscribe</Button>
+                                </DialogActions>
+                            </Dialog>
                         </form>
                     </div>
                     <button
@@ -959,7 +1014,7 @@ function Checkout({ total }) {
                             fontWeight: "400",
                             letterSpacing: ".1em",
                         }}
-                        onClick={(event) => onSubmit(event, "cod")}
+                        onClick={(event) => onSubmit(event, "")}
                     >
                         Place order
                     </button>

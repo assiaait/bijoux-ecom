@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
-import './index.css';
-import PartShop from "./PartShop";
-import Header1 from "./Header1";
-import Header2 from "./Header2";
-import Footer from './Footer';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import CategorySlide from './CategorySlide';
-import AsideCategories from './AsideCategories';
 import CardProduct from './CardProduct';
-import Boucle from '../src/img/boucle.jpg';
+import Boucle from '../../img/boucle.jpg';
 import {  Rating } from '@mui/material';
 import {useState} from 'react';
 import Counter from './Counter' ;
@@ -53,8 +46,6 @@ class Product extends Component{
         return(
             <React.Fragment>
                 <header>
-                    <Header1 />
-                    <Header2 />
                     <Breadcrumbs
                         separator={<NavigateNextIcon fontSize="small" />}
                         aria-label="breadcrumb"
@@ -133,9 +124,6 @@ class Product extends Component{
                         </div>
                     </div>
                 </main>
-                <footer>
-                    <Footer />
-                </footer>
             </React.Fragment>
         )
     }
