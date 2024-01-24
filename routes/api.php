@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,7 @@ Route::middleware(['auth:sanctum', 'ability:client'])->prefix('client')->group(s
     Route::put('cart-updatequantity/{cart_id}/{scope}',[CartController::class, 'updatequantity']);
     Route::delete('delete-cartitem/{cart_id}', [CartController::class, 'deleteCartitem']);
     Route::post('place-order',[CheckoutController::class,'placeorder']);
+    Route::post('validate-order',[CheckoutController::class,'validateOrder']);
 });
 
 Route::middleware(['auth:sanctum', 'ability:admin'])->prefix('admin')->group(static function () {
