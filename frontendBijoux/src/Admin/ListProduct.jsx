@@ -7,7 +7,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import ProductApi from "../services/Api/ProductApi"; 
+import ProductApi from "../services/Api/ProductApi";
 import axios from "axios"; // Import Axios
 
 export default function ListProduct() {

@@ -10,8 +10,25 @@ import { axiosClient } from "../../api/axios";
 import swal from "sweetalert";
 import { Link } from "react-router-dom";
 import OrderApi from "../../services/Api/OrderApi";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+    CardElement,
+    Elements,
+    useStripe,
+    useElements,
+} from "@stripe/react-stripe-js";
+import CheckoutForm from "./CheckoutForm";
+import Stripe from "./Stripe";
 
-function Checkout() {
+function Checkout({ total }) {
     const [successMessage, setSuccessMessage] = useState(null);
     const [cart, setCart] = useState([]);
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -28,14 +45,42 @@ function Checkout() {
         phone: "",
         email: "",
         ordernotes: "",
+        payment_mode: "",
+        shipping_type: "",
     });
     const [shippingType, setShippingType] = useState("flat");
+
+    const stripePromise = loadStripe("pk_test_oKhSR5nslBRnBZpjO6KuzZeX");
+
+    const [open, setOpen] = useState(false);
+    const [clientSecret, setClientSecret] = useState(null); // Add this line
+    const handleChange = (event, payment_mode) => {
+        const target = event.target;
+        const name = target.name;
+        const value = target.value;
+
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value,
+            payment_mode: payment_mode,
+        }));
+        if (payment_mode === "payPal") {
+            handleClickOpen(); 
+        }
+    };
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     // Update the state when the user selects a shipping option
     const handleShippingTypeChange = (event) => {
         setShippingType(event.target.value);
     };
-    const onSubmit = async (event) => {
+    const onSubmit = async (event, payment_mode) => {
         event.preventDefault();
 
         try {
@@ -51,6 +96,7 @@ function Checkout() {
                 phone,
                 email,
                 ordernotes,
+                payment_mode,
                 shipping_type,
             } = formData;
 
@@ -70,6 +116,7 @@ function Checkout() {
             formDataToSend.append("phone", phone);
             formDataToSend.append("email", email);
             formDataToSend.append("ordernotes", ordernotes);
+            formDataToSend.append("payment_mode", payment_mode);
             formDataToSend.append("shipping_type", shippingType);
 
             // Make API call
@@ -98,6 +145,7 @@ function Checkout() {
                     phone: "",
                     email: "",
                     ordernotes: "",
+                    payment_mode: "",
                     shipping_type: "",
                 });
 
@@ -110,6 +158,75 @@ function Checkout() {
                     response.data.message || "Unknown error",
                     "error"
                 );
+            }
+            switch (payment_mode) {
+                case "checkpayments":
+                    // Stripe payment logic
+                    // Call the Stripe API to create a PaymentIntent and redirect to payment page
+                    try {
+                        const response = await axios.post(
+                            `/client/validate-order`,
+                            { items: [{ amount: totalCartPrice }] }
+                        );
+                        const clientSecret = response.data.clientSecret;
+
+                        const stripe = await stripePromise;
+                        const result = await stripe.confirmCardPayment(
+                            clientSecret,
+                            {
+                                payment_method: {
+                                    card: Elements.getElement(CardElement), // You need to import CardElement from '@stripe/react-stripe-js'
+                                    billing_details: {
+                                        name: `${formData.firstname} ${formData.lastname}`,
+                                        email: formData.email,
+                                        // ... other billing details ...
+                                    },
+                                },
+                            }
+                        );
+
+                        if (result.error) {
+                            // Handle errors
+                            console.error(result.error.message);
+                        } else {
+                            // Payment successful, redirect or show success message
+                            console.log(result.paymentIntent);
+                        }
+                    } catch (error) {
+                        console.error(
+                            "Error processing Stripe payment:",
+                            error
+                        );
+                    }
+                    break;
+                case "payPal":
+                    axiosClient
+                        .post("/client/place-order", formDataToSend)
+                        .then((res) => {
+                            if (res.data.status === 200) {
+                            } else if (res.data.status === 422) {
+                                swal("All fields are mandetory", "", "error");
+                            }
+                        });
+                    break;
+                case "cashOnDelivery":
+                    axiosClient
+                        .post("/client/validate-order", formDataToSend)
+                        .then((res) => {
+                            if (res.data.status === 200) {
+                                swal(
+                                    "Order placed successfully",
+                                    response.data.message,
+                                    "success"
+                                );
+                            } else if (res.data.status === 422) {
+                                swal("All fields are mandetory", "", "error");
+                            }
+                        });
+                    break;
+
+                default:
+                    break;
             }
         } catch (error) {
             console.error("Error submitting order:", error);
@@ -150,7 +267,7 @@ function Checkout() {
 
         fetchData();
     }, []);
-
+    
     return (
         <div
             style={{ width: "100vw", paddingLeft: "5vw", paddingBottom: "5vh" }}
@@ -696,7 +813,9 @@ function Checkout() {
                                     textAlign: "left",
                                 }}
                                 value={shippingType}
-                                onChange={handleShippingTypeChange}
+                                onChange={(event) =>
+                                    onSubmit(event, formData.payment_mode)
+                                }
                             >
                                 <FormControlLabel
                                     value="free"
@@ -763,7 +882,123 @@ function Checkout() {
                             marginBottom: "30px",
                         }}
                     >
-                        <CardBank className="mt-3" />
+                        <form
+                            id="payment-form"
+                            onSubmit={(event) =>
+                                onSubmit(event, formData.payment_mode)
+                            }
+                        >
+                            <FormControl sx={{ m: 3 }} variant="standard">
+                                <RadioGroup
+                                    aria-labelledby="demo-radio-buttons-group-label"
+                                    defaultValue="freeShipping"
+                                    name="payment_mode" // Make sure the name matches your formData property
+                                    style={{
+                                        fontSize: "0.75rem",
+                                        fontWeight: "400",
+                                        lineHeight: "1.75",
+                                        cursor: "pointer",
+                                        color: "#868686",
+                                        textAlign: "left",
+                                    }}
+                                    value={formData.payment_mode}
+                                    onChange={handleChange}
+                                >
+                                    <FormControlLabel
+                                        value="checkPayments"
+                                        control={<Radio size="small" />}
+                                        label="Check Payments"
+                                        onClick={(e) =>
+                                            handleChange(e, "checkpayments")
+                                        }
+                                    />
+                                    <FormControlLabel
+                                        value="payPal"
+                                        control={<Radio size="small" />}
+                                        label="PayPal"
+                                        onClick={(e) =>
+                                            handleChange(e, "payPal")
+                                        }
+                                    />
+                                    <FormControlLabel
+                                        value="cashOnDelivery"
+                                        control={<Radio size="small" />}
+                                        label="Cash on delivery"
+                                        onClick={(e) =>
+                                            handleChange(e, "cashOnDelivery")
+                                        }
+                                    />
+                                </RadioGroup>
+                                <FormHelperText
+                                    style={{
+                                        fontFamily: "Uchen Regular",
+                                        fontSize: "0.75rem",
+                                        fontWeight: "400",
+                                        lineHeight: "1.75",
+                                        color: "#868686",
+                                        textAlign: "left",
+                                    }}
+                                >
+                                    {formData.payment_mode}
+                                </FormHelperText>
+                            </FormControl>
+                            <Stripe total={totalCartPrice} />
+                            <Stripe total={totalCartPrice} />
+                            {formData.payment_mode === "checkpayments" &&
+                                clientSecret !== null && (
+                                    <Elements
+                                        stripe={stripePromise}
+                                        options={{ clientSecret }}
+                                    >
+                                        <CheckoutForm />
+                                    </Elements>
+                                )}
+                            <Dialog
+                                open={open}
+                                onClose={handleClose}
+                                PaperProps={{
+                                    component: "form",
+                                    onSubmit: (event) => {
+                                        event.preventDefault();
+                                        const formData = new FormData(
+                                            event.currentTarget
+                                        );
+                                        const formJson = Object.fromEntries(
+                                            formData.entries()
+                                        );
+                                        const email = formJson.email;
+                                        console.log(email);
+                                        handleClose();
+                                    },
+                                }}
+                            >
+                                <DialogTitle>Subscribe</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText>
+                                        To subscribe to this website, please
+                                        enter your email address here. We will
+                                        send updates occasionally.
+                                    </DialogContentText>
+                                    <TextField
+                                        autoFocus
+                                        required
+                                        margin="dense"
+                                        id="name"
+                                        name="email"
+                                        label="Email Address"
+                                        type="email"
+                                        fullWidth
+                                        variant="standard"
+                                    />
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleClose}>
+                                        Cancel
+                                    </Button>
+                                    <Button type="submit">Subscribe</Button>
+                                </DialogActions>
+                            </Dialog>
+                        </form>
                     </div>
                     <button
                         style={{
@@ -779,7 +1014,7 @@ function Checkout() {
                             fontWeight: "400",
                             letterSpacing: ".1em",
                         }}
-                        onClick={onSubmit}
+                        onClick={(event) => onSubmit(event, "")}
                     >
                         Place order
                     </button>

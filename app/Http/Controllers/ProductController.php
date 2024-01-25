@@ -46,7 +46,15 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+            if(auth('sanctum')->check()){
+                $user_id = auth('sanctum')->user()->id;
+            
+            }else {
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Login to continue'
+                ]);
+            }
     }
 
     /**
