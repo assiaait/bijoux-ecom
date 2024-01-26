@@ -16,7 +16,6 @@ class ProductController extends Controller
     public function index()
     {
         return ProductResource::collection(Product::all());
-
     }
 
     /**
@@ -28,7 +27,7 @@ class ProductController extends Controller
 
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
             $imagePath = $request->file('image')->store('product_images', 'public');
-    
+
             $product = Product::create([
                 'name' => $request->input('name'),
                 'price' => $request->input('price'),
@@ -36,7 +35,7 @@ class ProductController extends Controller
                 'description' => $request->input('description'),
                 'image_url' => '/storage/' . $imagePath,
             ]);
-    
+
             return new ProductResource($product);
         }
     }
@@ -44,17 +43,16 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show($productId)
     {
-            if(auth('sanctum')->check()){
-                $user_id = auth('sanctum')->user()->id;
-            
-            }else {
-                return response()->json([
-                    'status' => 401,
-                    'message' => 'Login to continue'
-                ]);
-            }
+        // Assuming Product is the model for your products
+        $product = Product::find($productId);
+
+        if (!$product) {
+            return response()->json(['error' => 'Product not found'], 404);
+        }
+
+        return new ProductResource($product);
     }
 
     /**

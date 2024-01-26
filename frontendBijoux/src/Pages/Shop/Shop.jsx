@@ -82,15 +82,23 @@ function Shop(props) {
 
         fetchProducts();
     }, []);
+    const fetchProductDetails = async (productId) => {
+        try {
+            const response = await ProductApi.show(productId);
+            setProduct(response.data); // Assuming your API response has a "data" property
+        } catch (error) {
+            console.error("Error fetching product details:", error);
+        }
+    };
     function handleClick(event) {
         event.preventDefault();
         console.info("You clicked a breadcrumb.");
     }
     const handleProductClick = (productId) => {
-        // Use the `navigate` function from `react-router-dom` to navigate to the product page
-        Navigate(`/product/${productId}`);
+        // Use the `Link` component to navigate to the product page
+        return <Link to={`/product/${productId}`} />;
     };
-    
+
     const breadcrumbs = [
         <Link
             underline="hover"
@@ -184,121 +192,135 @@ function Shop(props) {
                                 </ul>
                             </div>
                         </div>
-                        <Link to={`/product`}>
-                            <div className="row row-cols-3 justify-content-between mt-3 mb-2">
-                                <div
-                                    className="container row row-cols-4 gap-3 justify-content-between"
-                                    style={{
-                                        display: "grid",
-                                        gridTemplateColumns: "repeat(3, 1fr)",
-                                        gridTemplateRows: "repeat(5, 1fr)",
-                                        gridGap: "10px",
-                                    }}
-                                >
-                                    {products.map((product, index) => (
-                                        <Link
-                                            to={`/product/${product.id}`}
+
+                        <div className="row row-cols-3 justify-content-between mt-3 mb-2">
+                            <div
+                                className="container row row-cols-4 gap-3 justify-content-between"
+                                style={{
+                                    display: "grid",
+                                    gridTemplateColumns: "repeat(3, 1fr)",
+                                    gridTemplateRows: "repeat(5, 1fr)",
+                                    gridGap: "10px",
+                                }}
+                            >
+                                {products.map((product, index) => (
+                                    <Link
+                                        to={`/product/${product.id}`}
+                                        key={product.id}
+                                        onClick={() =>
+                                            handleProductClick(product.id)
+                                        }
+                                        style={{
+                                            textDecoration: "none",
+                                            textTransform: "none",
+                                        }}
+                                    >
+                                        <div
+                                            className={`cardProduct ${
+                                                hoveredStates[index]
+                                                    ? "hovered"
+                                                    : ""
+                                            }`}
+                                            onMouseEnter={() =>
+                                                handleMouseEnter(index)
+                                            }
+                                            onMouseLeave={() =>
+                                                handleMouseLeave(index)
+                                            }
+                                            onClick={() =>
+                                                handleProductClick(product.id)
+                                            }
+                                            item
                                             key={product.id}
+                                            style={{
+                                                gridArea: `${
+                                                    Math.floor(index / 3) + 1
+                                                } / ${(index % 3) + 1} / ${
+                                                    Math.floor(index / 3) + 2
+                                                } / ${(index % 3) + 2}`,
+                                                marginLeft: "10px",
+                                                height: "50vh",
+                                            }}
                                         >
-                                            <div
-                                                className={`cardProduct ${
-                                                    hoveredStates[index]
-                                                        ? "hovered"
-                                                        : ""
-                                                }`}
-                                                onMouseEnter={() =>
-                                                    handleMouseEnter(index)
-                                                }
-                                                onMouseLeave={() =>
-                                                    handleMouseLeave(index)
-                                                }
-                                                onClick={() =>
-                                                    handleProductClick(
-                                                        product.id
-                                                    )
-                                                }
-                                                item
-                                                key={product.id}
-                                                style={{
-                                                    gridArea: `${
-                                                        Math.floor(index / 3) +
-                                                        1
-                                                    } / ${(index % 3) + 1} / ${
-                                                        Math.floor(index / 3) +
-                                                        2
-                                                    } / ${(index % 3) + 2}`,
-                                                    marginLeft: "10px",
-                                                    height: "50vh",
-                                                }}
-                                            >
-                                                {product.image_url ? (
-                                                    <div
-                                                        item
-                                                        key={product.id}
-                                                        xs={12}
-                                                        sm={6}
-                                                        md={4}
-                                                        className="product"
-                                                        component="img"
-                                                        alt={product.name}
-                                                        height="140"
-                                                        style={{
-                                                            objectFit: "cover",
-                                                            backgroundImage: `url(${apiUrl}${product.image_url})`,
-                                                        }}
-                                                    >
-                                                        <div className="product cardProduct d-flex justify-content-between">
-                                                            <span>-40%</span>
-                                                            {product.stock ===
-                                                                0 && (
-                                                                <h6
-                                                                    className="pt-1 px-1"
-                                                                    style={{
-                                                                        color: "#ffffff",
-                                                                    }}
-                                                                >
-                                                                    Out Of Stock
-                                                                </h6>
-                                                            )}
-                                                        </div>
-                                                        <div className="pt-3">
-                                                            <h6>
-                                                                {product.name}
+                                            {product.image_url ? (
+                                                <div
+                                                    item
+                                                    key={product.id}
+                                                    xs={12}
+                                                    sm={6}
+                                                    md={4}
+                                                    className="product"
+                                                    component="img"
+                                                    alt={product.name}
+                                                    height="140"
+                                                    style={{
+                                                        objectFit: "cover",
+                                                        backgroundImage: `url(${apiUrl}${product.image_url})`,
+                                                    }}
+                                                >
+                                                    <div className="product cardProduct d-flex justify-content-between">
+                                                        <span>-40%</span>
+                                                        {product.stock ===
+                                                            0 && (
+                                                            <h6
+                                                                className="pt-1 px-1"
+                                                                style={{
+                                                                    color: "#ffffff",
+                                                                }}
+                                                            >
+                                                                Out Of Stock
                                                             </h6>
-                                                            <div className="d-flex column prix ">
-                                                                <p className="">
-                                                                    {
-                                                                        product.price
-                                                                    }{" "}
-                                                                    MAD
-                                                                </p>
-                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="pt-3">
+                                                        <h6>{product.name}</h6>
+                                                        <div className="d-flex column prix ">
+                                                            <p className="">
+                                                                {product.price}{" "}
+                                                                MAD
+                                                            </p>
                                                         </div>
                                                     </div>
-                                                ) : (
-                                                    <Typography variant="body2">
-                                                        No Image Available
-                                                    </Typography>
-                                                )}
+                                                </div>
+                                            ) : (
+                                                <Typography variant="body2">
+                                                    No Image Available
+                                                </Typography>
+                                            )}
 
-                                                {hoveredStates[index] && (
-                                                    <Link>
+                                            {hoveredStates[index] &&
+                                                (product.stock > 0 ? (
+                                                    <Link
+                                                        to={`/product/${product.id}`}
+                                                    >
                                                         <button
                                                             className="add-to-cart-button btn-cart-add"
-                                                            onClick={
-                                                                submitAddToCart
+                                                            onClick={() =>
+                                                                submitAddToCart(
+                                                                    product.id
+                                                                )
                                                             }
                                                         >
                                                             Add to Cart
                                                         </button>
                                                     </Link>
-                                                )}
-                                            </div>
-                                        </Link>
-                                    ))}
-                                </div>
+                                                ) : (
+                                                    <button
+                                                        className="add-to-cart-button btn-cart-add"
+                                                        disabled={
+                                                            product.stock === 0
+                                                        }
+                                                    >
+                                                        {product.stock > 0
+                                                            ? "Add to Cart"
+                                                            : "Out of Stock"}
+                                                    </button>
+                                                ))}
+                                        </div>
+                                    </Link>
+                                ))}
                             </div>
-                        </Link>
+                        </div>
                     </article>
                 </section>
             </main>

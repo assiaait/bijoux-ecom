@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import ProductApi from "../../services/Api/ProductApi";
 import axios from "axios";
 import { axiosClient } from "../../api/axios";
-import swal from 'sweetalert';
+import swal from "sweetalert";
 
 const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -22,7 +22,7 @@ export default function PartShop(props) {
         Array(products.length).fill(false)
     );
     const [product, setProduct] = useState([]);
-    const [quantity,setQuantity] =useState(1);
+    const [quantity, setQuantity] = useState(1);
 
     const handleMouseEnter = (index) => {
         setHoveredStates((prev) => {
@@ -43,23 +43,25 @@ export default function PartShop(props) {
 
     const submitAddToCart = async (e) => {
         e.preventDefault();
-        console.log('Product ID:', product.id); 
+        console.log("Product ID:", product.id);
         const data = {
-            product_id : product.id,
-            product_qty : quantity,
-        }
+            product_id: product.id,
+            product_qty: quantity,
+        };
 
-        await axiosClient.post(`${apiUrl}/api/client/add-to-cart`, data).then(res=>{
-            if(res.data.status === 201){
-                swal("Success",res.data.message,"success");
-            }else if (res.data.status === 409) {
-                swal("Success",res.data.message,"success");
-            }else if (res.data.status === 401) {
-                swal("Error",res.data.message,"error");
-            }else if (res.data.status === 404) {
-                swal("Warning",res.data.message,"warning");
-            }
-        })
+        await axiosClient
+            .post(`${apiUrl}/api/client/add-to-cart`, data)
+            .then((res) => {
+                if (res.data.status === 201) {
+                    swal("Success", res.data.message, "success");
+                } else if (res.data.status === 409) {
+                    swal("Success", res.data.message, "success");
+                } else if (res.data.status === 401) {
+                    swal("Error", res.data.message, "error");
+                } else if (res.data.status === 404) {
+                    swal("Warning", res.data.message, "warning");
+                }
+            });
     };
 
     useEffect(() => {
@@ -132,7 +134,8 @@ export default function PartShop(props) {
                 }}
             >
                 {products.map((product, index) => (
-                    <div
+                    <Link
+                        to={`/product/${product.id}`}
                         className={`cardProduct ${
                             hoveredStates[index] ? "hovered" : ""
                         }`}
@@ -148,7 +151,10 @@ export default function PartShop(props) {
                             }`,
                             marginLeft: "10px",
                             height: "50vh",
+                            textDecoration: "none",
+                            textTransform: "none",
                         }}
+                        onClick={() => handleProductClick(product.id)}
                     >
                         {product.image_url ? (
                             <div
@@ -190,17 +196,29 @@ export default function PartShop(props) {
                             </Typography>
                         )}
 
-                        {hoveredStates[index] && (
-                            <Link>
+                        {hoveredStates[index] &&
+                            (product.stock > 0 ? (
+                                <Link to={`/product/${product.id}`}>
+                                    <button
+                                        className="add-to-cart-button btn-cart-add"
+                                        onClick={() =>
+                                            submitAddToCart(product.id)
+                                        }
+                                    >
+                                        Add to Cart
+                                    </button>
+                                </Link>
+                            ) : (
                                 <button
                                     className="add-to-cart-button btn-cart-add"
-                                    onClick={submitAddToCart}
+                                    disabled={product.stock === 0}
                                 >
-                                    Add to Cart
+                                    {product.stock > 0
+                                        ? "Add to Cart"
+                                        : "Out of Stock"}
                                 </button>
-                            </Link>
-                        )}
-                    </div>
+                            ))}
+                    </Link>
                 ))}
             </div>
         </main>
