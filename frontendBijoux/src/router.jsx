@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "./Pages/Home/home.jsx";
 import Login from "./Pages/auth/Login.jsx";
-import SingUp from "./Pages/register.jsx";
 import NotFound from "./Pages/NotFound.jsx";
 import ClientHome from "./Pages/Home/clientHome.jsx";
 import Layout from "./Layouts/layout.jsx";
@@ -20,6 +19,7 @@ import Checkout from "./Pages/checkoutPages/Checkout.jsx";
 import ShoppingCarts from "./Pages/checkoutPages/ShoppingCarts.jsx";
 import Orders from "./Admin/Orders.jsx";
 import Product from "./Pages/Shop/Product.jsx";
+import Register from "./Pages/auth/register.jsx";
 export const USER_HOME_ROUTE = "/Home";
 export const ROUTE_LOGIN = "/login";
 export const CLIENT_HOME_ROUTE = "/clientHome";
@@ -56,6 +56,14 @@ export const router = createBrowserRouter([
                 path: "*",
                 element: <NotFound />,
             },
+            {
+                path: "/product/:productId",
+                element: <Product />,
+            },
+            {
+                path: "/Register",
+                element: <Register />,
+            },
         ],
     },
     {
@@ -65,10 +73,6 @@ export const router = createBrowserRouter([
             {
                 path: ROUTE_LOGIN,
                 element: <Login />,
-            },
-            {
-                path: "/signup",
-                element: <SingUp />,
             },
         ],
     },
@@ -89,9 +93,10 @@ export const router = createBrowserRouter([
                 element: <Checkout />,
             },
             {
-                path: "/product",
-                element: <Product />,
+                path: "/shop",
+                element: <Shop />,
             },
+            
         ],
     },
     {

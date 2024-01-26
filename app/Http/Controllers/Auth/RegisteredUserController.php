@@ -9,7 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+
+
 
 class RegisteredUserController extends Controller
 {
@@ -18,23 +23,37 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): Response
+    public function store(Request $request)
+
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'validation_errors' => $validator->messages(),
+            ]);
+        } else {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'created_at' => now(),
+            ]);
+            Log::info('User created: ' . $user);
+            $token = $user->createToken($user->email . '_Token')->plainTextToken;
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+            return response()->json([
+                'status' => 200,
+                'username' => $user->name,
+                'token' => $token,
+                'message' => 'Registered Successfully',
+            ]);
+        }
 
-        event(new Registered($user));
 
-        Auth::login($user);
 
         return response()->noContent();
     }

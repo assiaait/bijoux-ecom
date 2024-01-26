@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
@@ -24,7 +25,6 @@ Route::middleware(['auth:sanctum', 'ability:client'])->prefix('client')->group(s
         return $request->user();
     });
     Route::apiResource('products', ProductController::class);
-    Route::get('products/{product_id}', [ProductController::class, 'show']);
     Route::post('add-to-cart', [CartController::class, 'addtocart']);
     Route::get('cart', [CartController::class, 'viewCart']);
     Route::put('cart-updatequantity/{cart_id}/{scope}',[CartController::class, 'updatequantity']);
@@ -43,9 +43,10 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->prefix('admin')->group(sta
 Route::get('/', function (Request $request) {
     return $request->user();
 });
+Route::get('product/{productId}', [ProductController::class, 'show']);
 
 Route::apiResource('products', ProductController::class);
-
+Route::post('register', [RegisteredUserController::class, 'store']);
 
 
 

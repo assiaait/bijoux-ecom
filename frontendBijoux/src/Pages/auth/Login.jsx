@@ -144,7 +144,7 @@ function Login() {
                                     fontWeight: "500",
                                     paddingLeft: "10px",
                                 }}
-                                to="/register"
+                                to="/Register"
                             >
                                 Register
                             </Link>

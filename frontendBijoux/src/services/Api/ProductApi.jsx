@@ -16,6 +16,14 @@ const ProductApi = {
           throw error;
         }
       },
+      show: async (productId) => {
+        try {
+            const response = await axiosClient.get(`/product/${productId}`);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
 };
 
 export default ProductApi;
