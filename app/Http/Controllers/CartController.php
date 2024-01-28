@@ -113,4 +113,21 @@ class CartController extends Controller
             ]);
         }
     }
+    public function countCart()
+    {
+        if(auth('sanctum')->check()) {
+            $user_id = auth('sanctum')->user()->id;
+            $cartCount = Cart::where('user_id', $user_id)->sum('product_qty');
+
+            return response()->json([
+                'status' => 200,
+                'cart_count' => $cartCount,
+            ]);
+        } else {
+            return response()->json([
+                'status' => 401,
+                'message' => 'Login to continue'
+            ]);
+        }
+    }
 }

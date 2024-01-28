@@ -30,7 +30,7 @@ import "../../index.css";
 import { useEffect, useState } from "react";
 import { useUserContext } from "../../context/UserContext";
 import ClientApi from "../../services/Api/Client/ClientApi";
-import { ROUTE_LOGIN } from "../../router";
+import { ADMIN_MANAGE_CATEGORIES_ROUTE, ROUTE_LOGIN } from "../../router";
 import { ADMIN_MANAGE_PRODUCTS_ROUTE } from "../../router";
 
 //product
@@ -238,12 +238,22 @@ export default function AdminDashboardLayout() {
                                 </ListItemIcon>
                                 <ListItemText primary="Reports" />
                             </ListItemButton>
-                            <ListItemButton>
+                            <Link
+                                to={ADMIN_MANAGE_CATEGORIES_ROUTE}
+                                style={{
+                                    textDecoration: "none",
+                                    textTransform: "none",
+                                    color: "#181818",
+                                }}
+                            >
+                                <ListItemButton>
                                 <ListItemIcon>
                                     <LayersIcon style={{ color: "#34513f" }} />
                                 </ListItemIcon>
-                                <ListItemText primary="Integrations" />
+                                <ListItemText primary="Categories" />
                             </ListItemButton>
+                            </Link>
+                            
                             <Link
                                 to={ADMIN_MANAGE_PRODUCTS_ROUTE}
                                 style={{

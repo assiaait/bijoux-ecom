@@ -20,13 +20,16 @@ import ShoppingCarts from "./Pages/checkoutPages/ShoppingCarts.jsx";
 import Orders from "./Admin/Orders.jsx";
 import Product from "./Pages/Shop/Product.jsx";
 import Register from "./Pages/auth/register.jsx";
+import ManageCategories from "./Admin/ManageCategories.jsx";
+import CreateCategories from "./Admin/forms/CreateCategories.jsx";
+import ListCategories from "./Admin/ListCategories.jsx";
 export const USER_HOME_ROUTE = "/Home";
 export const ROUTE_LOGIN = "/login";
 export const CLIENT_HOME_ROUTE = "/clientHome";
 export const ADMIN_BASE_ROUTE = "/admin";
 export const ADMIN_DASHBOARD_ROUTE = ADMIN_BASE_ROUTE + "/adminDashboard";
-export const ADMIN_MANAGE_PRODUCTS_ROUTE =
-    ADMIN_BASE_ROUTE + "/manage-products";
+export const ADMIN_MANAGE_PRODUCTS_ROUTE = ADMIN_BASE_ROUTE + "/manage-products";
+export const ADMIN_MANAGE_CATEGORIES_ROUTE = ADMIN_BASE_ROUTE + "/manage-categories";
 export const router = createBrowserRouter([
     {
         //partie visiteurs
@@ -84,19 +87,18 @@ export const router = createBrowserRouter([
                 element: <ClientHome />,
             },
             {
-                path: '/cart',
+                path: "/cart",
                 element: <ShoppingCarts />,
             },
-            
+
             {
-                path: '/checkout',
+                path: "/checkout",
                 element: <Checkout />,
             },
             {
                 path: "/shop",
                 element: <Shop />,
             },
-            
         ],
     },
     {
@@ -111,6 +113,10 @@ export const router = createBrowserRouter([
                 element: <ManageProducts />,
             },
             {
+                path: ADMIN_MANAGE_CATEGORIES_ROUTE,
+                element: <ManageCategories />,
+            },
+            {
                 path: "/list-products",
                 element: <ListProduct />,
             },
@@ -121,6 +127,14 @@ export const router = createBrowserRouter([
             {
                 path: "/list-order",
                 element: <Orders />,
+            },
+            {
+                path: "/create-category",
+                element: <CreateCategories />,
+            },
+            {
+                path: "/list-categories",
+                element: <ListCategories />,
             },
         ],
     },
