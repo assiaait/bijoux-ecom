@@ -10,19 +10,25 @@ const ProductApi = {
     },
     All: async () => {
         try {
-          const response = await axios.get(`${apiUrl}/api/products`);
-          return response.data;
+            const response = await axios.get(`${apiUrl}/api/products`);
+            return response.data;
         } catch (error) {
-          throw error;
+            throw error;
         }
-      },
-      show: async (productId) => {
+    },
+    show: async (productId) => {
         try {
             const response = await axiosClient.get(`/product/${productId}`);
             return response.data;
         } catch (error) {
             throw error;
         }
+    },
+    createCategories: async (payload) => {
+        return await axiosClient.post("/admin/categories", payload);
+    },
+    getAllCategories: async () => {
+        return await axiosClient.get("/admin/categories");
     },
 };
 

@@ -11,6 +11,10 @@ const ClientApi = {
     },
     getUser: async() => {
         return await axiosClient.get('/')  
-    }
+    },
+    getCartItemCount: async () => {
+        
+        return await axiosClient.get('/client/cart/count')
+    },
 }
 export default ClientApi

@@ -10,7 +10,7 @@ export default function ClientHome (){
         return (
             <>
                 <header>
-                <NavBar/>
+                 <NavBar/>
                 </header>
                 <main>
                     <Slide />

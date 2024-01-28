@@ -10,7 +10,7 @@ import { ROUTE_LOGIN } from "../../router";
 
 export default function ClientLayout() {
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(true);
     const {
         authenticated,
         setUser,
@@ -19,14 +19,35 @@ export default function ClientLayout() {
         user,
     } = useUserContext();
     const [cart, setCart] = useState([]);
+    const fetchCartCount = () => {
+        ClientApi.getCartItemCount()
+            .then((response) => {
+                const { status, cart_count } = response.data;
+                if (status === 200) {
+                    const count = parseInt(cart_count, 10) || 0;
+    
+                    setCart([{ product_qty: count }]);
+                } else {
+                    console.error("Failed to fetch cart count:", response.data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching cart count:", error.message);
+            });
+    };
+    
     useEffect(() => {
         if (authenticated === true) {
-            setIsLoading(false)
+            setIsLoading(false);
             ClientApi.getUser()
                 .then(({ data }) => {
+                    console.log("Fetched user data:", data);
+                    const userCart = data.cart || [];
+    
                     setUser(data);
                     setAuthenticated(true);
-                    setCart(data.cart || []);
+                    console.log('Fetched cart data:', userCart);
+                    setCart(userCart);
                 })
                 .catch((error) => {
                     console.error("Error fetching user:", error);
@@ -35,7 +56,9 @@ export default function ClientLayout() {
         } else {
             navigate(ROUTE_LOGIN);
         }
-    },[authenticated]);
+        fetchCartCount();
+    }, [authenticated, navigate, contextLogout, setUser, setAuthenticated]);
+    
     const logout = async () => {
         ClientApi.logout().then(() => {
             contextLogout();
@@ -69,7 +92,7 @@ export default function ClientLayout() {
                         <hr />
                     </div>
                 </div>
-                <Header2 cart={cart} />
+                <Header2 cart={cart} setCart={setCart} />
             </header>
             <main>
                 <Outlet />

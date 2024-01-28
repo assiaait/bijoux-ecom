@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
@@ -31,6 +32,7 @@ Route::middleware(['auth:sanctum', 'ability:client'])->prefix('client')->group(s
     Route::delete('delete-cartitem/{cart_id}', [CartController::class, 'deleteCartitem']);
     Route::post('place-order',[CheckoutController::class,'placeorder']);
     Route::post('validate-order',[CheckoutController::class,'validateOrder']);
+    Route::get('cart/count', [CartController::class, 'countCart']);
 });
 
 Route::middleware(['auth:sanctum', 'ability:admin'])->prefix('admin')->group(static function () {
@@ -39,12 +41,13 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->prefix('admin')->group(sta
     Route::get('/', function (Request $request) {
         return $request->user();
     });
+    Route::apiResource('categories', CategoryController::class);
 });
 Route::get('/', function (Request $request) {
     return $request->user();
 });
 Route::get('product/{productId}', [ProductController::class, 'show']);
-
+Route::apiResource('categories', CategoryController::class);
 Route::apiResource('products', ProductController::class);
 Route::post('register', [RegisteredUserController::class, 'store']);
 
