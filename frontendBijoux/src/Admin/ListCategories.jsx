@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -77,8 +78,12 @@ export default function ListCategories() {
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Button size="small">View</Button>
-                                        <Button size="small">Edit</Button>
+                                        <Link to={`/edit-category/${category.id}`}>
+                                            <Button size="small">Edit</Button>
+                                        </Link>
+                                        <Link>
+                                            <Button size="small">Delete</Button>
+                                        </Link>
                                     </CardActions>
                                 </Card>
                             </Grid>

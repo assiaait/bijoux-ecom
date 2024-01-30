@@ -42,6 +42,9 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->prefix('admin')->group(sta
         return $request->user();
     });
     Route::apiResource('categories', CategoryController::class);
+    Route::get('edit-category/{categorytId}', [CategoryController::class, 'edit']);
+    Route::put('update-category/{categorytId}', [CategoryController::class, 'update']);
+    
 });
 Route::get('/', function (Request $request) {
     return $request->user();

@@ -23,6 +23,7 @@ import Register from "./Pages/auth/register.jsx";
 import ManageCategories from "./Admin/ManageCategories.jsx";
 import CreateCategories from "./Admin/forms/CreateCategories.jsx";
 import ListCategories from "./Admin/ListCategories.jsx";
+import EditCategory from "./Admin/editCategory.jsx";
 export const USER_HOME_ROUTE = "/Home";
 export const ROUTE_LOGIN = "/login";
 export const CLIENT_HOME_ROUTE = "/clientHome";
@@ -135,6 +136,10 @@ export const router = createBrowserRouter([
             {
                 path: "/list-categories",
                 element: <ListCategories />,
+            },
+            {
+                path: "/edit-category/:categorytId",
+                element: <EditCategory />,
             },
         ],
     },
