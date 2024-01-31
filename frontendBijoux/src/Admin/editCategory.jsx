@@ -10,8 +10,8 @@ import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { axiosClient } from "../api/axios";
 import swal from "sweetalert";
-import { useParams } from "react-router-dom";
-
+import { useParams, useNavigate } from "react-router-dom";
+import { ADMIN_MANAGE_CATEGORIES_ROUTE } from '../router'
 const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -26,15 +26,16 @@ const VisuallyHiddenInput = styled("input")({
 
 export default function editCategory() {
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
-    const [categoryInput, setCategory] = useState([]);
+    const [categoryInput, setCategory] = useState({});
     const [successMessage, setSuccessMessage] = useState(null);
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
 
     const [messageChangedImage, setMessageChangedImage] = useState();
     const { categoryId } = useParams();
     const handleImageChange = (e) => {
         const selectedImage = e.target.files[0];
-        setFormData({ ...formData, image: selectedImage });
+        setCategory({ ...categoryInput, image: selectedImage });
         console.log("Image changed:", selectedImage);
         setMessageChangedImage(`Image changed: ${selectedImage.name}`);
     };
@@ -47,38 +48,29 @@ export default function editCategory() {
         setOpen(false);
     };
     useEffect(() => {
-        if (categoryId) {
-            axiosClient.get(`/admin/edit-category/${categoryId}`)
-                .then((res) => {
-                    if (res.data.status === 200) {
-                        setCategory(res.data.category);
-                    } else if (res.data.status === 404) {
-                        swal("Error", res.data.message, "error");
-                    }
-                })
-                .catch((error) => {
-                    // Handle any other errors
-                    console.error("Error fetching category:", error);
-                    swal("Error", "An unexpected error occurred", "error");
-                });
-        } else {
-            // Handle the case where categoryId is undefined
-            console.log("categoryId is undefined");
-        }
+        axiosClient.get(`/admin/edit-category/${categoryId}`)
+            .then((res) => {
+                if (res.data.status === 200) {
+                    setCategory(res.data.category);
+                } else if (res.data.status === 404) {
+                    swal("Error", res.data.message, "error");
+                }
+            });
     }, [categoryId]);
-    
     const handleInput = (e) => {
         e.persist();
         setCategory({ ...categoryInput, [e.target.name]: e.target.value });
     };
     const updateCategory = (e) => {
         e.preventDefault();
-        data = categoryInput;
+        const data = categoryInput;
         axiosClient
             .put(`/admin/update-category/${categoryId}`, data)
             .then((res) => {
                 if (res.data.status === 200) {
-                    swal("Success", res.data.message, "success");
+                    swal("Success", res.data.message, "success").then((value) => {
+                        navigate(ADMIN_MANAGE_CATEGORIES_ROUTE); // Redirect to listCategories page
+                    });
                 }
             });
     };

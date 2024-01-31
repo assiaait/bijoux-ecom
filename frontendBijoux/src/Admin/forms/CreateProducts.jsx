@@ -3,12 +3,16 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import ProductApi from "../../services/Api/ProductApi";
 import { Box } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import NativeSelect from "@mui/material/NativeSelect";
+import { axiosClient } from "../../api/axios";
 
 const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -25,14 +29,16 @@ const VisuallyHiddenInput = styled("input")({
 export default function CreateProducts() {
     const [successMessage, setSuccessMessage] = useState(null);
     const [open, setOpen] = useState(false);
+    const [categorylist, setCategorylist] = useState([]);
     const [formData, setFormData] = useState({
+        categoryId:"",
         name: "",
         price: "",
         stock: "",
         description: "",
         image: null,
     });
-    const [messageChangedImage, setMessageChangedImage]=useState()
+    const [messageChangedImage, setMessageChangedImage] = useState();
 
     const handleImageChange = (e) => {
         const selectedImage = e.target.files[0];
@@ -105,6 +111,22 @@ export default function CreateProducts() {
             }
         }
     };
+
+    const handleInput = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+    
+    useEffect(() => {
+        axiosClient.get(`/admin/all-category`).then((res) => {
+            if (res.data.status === 200) {
+                setCategorylist(res.data.category);
+            }
+        });
+    }, []);
 
     return (
         <form onSubmit={onSubmit}>
@@ -211,6 +233,28 @@ export default function CreateProducts() {
                         />
                     </Grid>
                     <Grid item xs={12}>
+                        <FormControl fullWidth>
+                            <InputLabel
+                                variant="standard"
+                                htmlFor="uncontrolled-native"
+                            >
+                                select category
+                            </InputLabel>
+                            <NativeSelect
+                                inputProps={{
+                                    name: "categoryId",
+                                    id: "uncontrolled-native",
+                                }}
+                                onChange={handleInput}
+                                value={formData.categoryId}
+                            >
+                                {categorylist.map((item) => {
+                                    return <option value={item.id} key={item.id}>{item.name}</option>;
+                                })}
+                            </NativeSelect>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
                         <Button
                             component="label"
                             variant="contained"
@@ -232,9 +276,7 @@ export default function CreateProducts() {
                                 onChange={(e) => handleImageChange(e)}
                             />
                         </Button>
-                            <p>
-                                {messageChangedImage}
-                            </p>
+                        <p>{messageChangedImage}</p>
                     </Grid>
 
                     <Grid item xs={12}>
