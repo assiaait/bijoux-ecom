@@ -141,6 +141,10 @@ export const router = createBrowserRouter([
                 path: "/edit-category/:categoryId",
                 element: <EditCategory />,
             },
+            {
+                path: "/edit-product/:productId",
+                element: <EditCategory />,
+            },
         ],
     },
 ]);

@@ -40,9 +40,9 @@ class CategoryController extends Controller
         }
     }
 
-    public function edit($categorytId)
+    public function edit($categoryId)
     {
-        $category = Category::find($categorytId);
+        $category = Category::find($categoryId);
         if ($category) {
             return response()->json([
                 'status' => 200,
@@ -96,9 +96,9 @@ class CategoryController extends Controller
             'category' => new CategoryResource($category),
         ]);
     }
-    public function destory($categorytId)
+    public function destory($categoryId)
     {
-        $category = Category::find($categorytId);
+        $category = Category::find($categoryId);
         if ($category) {
             $category->delete();
             return response()->json([

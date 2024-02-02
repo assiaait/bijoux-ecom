@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -15,7 +16,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return ProductResource::collection(Product::all());
+        $products = Product::with('category')->get();
+        return ProductResource::collection($products);
     }
 
     /**
@@ -34,6 +36,7 @@ class ProductController extends Controller
                 'stock' => $request->input('stock'),
                 'description' => $request->input('description'),
                 'image_url' => '/storage/' . $imagePath,
+                'category_id' => $request->input('categoryId'),
             ]);
 
             return new ProductResource($product);
@@ -58,16 +61,80 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductRequest $request, Product $product)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destory($productId)
     {
-        //
+        $product = Product::find($productId);
+        if ($product) {
+            $product->delete();
+            return response()->json([
+                'status' => 200,
+                'message' => 'Product Deleted Successfully',
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No Product Id Found',
+            ]);
+        }
+    }
+    public function edit($productId)
+    {
+        $product = Product::find($productId);
+        if ($product) {
+            return response()->json([
+                'status' => 200,
+                'product' => $product,
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No product Id Found',
+            ]);
+        }
+    }
+
+    public function update(Request $request, $productId)
+    {
+        $product = Product::find($productId);
+
+        // Check if category exists
+        if (!$product) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'product not found',
+            ]);
+        }
+
+        // Validate the request
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:1000',
+
+        ]);
+
+        // Update the category
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+
+
+        // Handle the image if it exists in the request
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            $imagePath = $request->file('image')->store('product_images', 'public');
+            $product->image_url = '/storage/' . $imagePath;
+        }
+
+        // Save the updated category
+        $product->save();
+
+        // Return a response
+        return response()->json([
+            'status' => 200,
+            'message' => 'Category updated successfully',
+            'category' => new ProductResource($product),
+        ]);
     }
 }

@@ -9,16 +9,12 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import ProductApi from "../services/Api/ProductApi";
-import axios from "axios"; // Import Axios
 import { axiosClient } from "../api/axios";
 import swal from "sweetalert";
-import { ADMIN_MANAGE_CATEGORIES_ROUTE } from '../router'
 export default function ListCategories() {
     const [categories, setCategories] = useState([]);
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
-    const navigate = useNavigate();
     useEffect(() => {
-        // Fetch product data from your API
         const fetchCategories = async () => {
             try {
                 const response = await ProductApi.getAllCategories();
