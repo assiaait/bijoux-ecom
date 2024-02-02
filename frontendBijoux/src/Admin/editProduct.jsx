@@ -26,7 +26,7 @@ const VisuallyHiddenInput = styled("input")({
     width: 1,
 });
 
-export default function CreateProducts() {
+export default function editProduct() {
     const [successMessage, setSuccessMessage] = useState(null);
     const [open, setOpen] = useState(false);
     const [categorylist, setCategorylist] = useState([]);

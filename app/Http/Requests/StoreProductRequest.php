@@ -26,6 +26,7 @@ class StoreProductRequest extends FormRequest
             'description' => 'required|max:200',
             'price' => 'required',
             'stock' => 'required',
+            
         ];
     }
 }

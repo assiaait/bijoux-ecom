@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -8,10 +9,11 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import ProductApi from "../services/Api/ProductApi";
-import axios from "axios"; // Import Axios
+import { axiosClient } from "../api/axios";
 
 export default function ListProduct() {
     const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
     useEffect(() => {
         // Fetch product data from your API
@@ -35,9 +37,51 @@ export default function ListProduct() {
             }
         };
 
-        fetchProducts();
-    }, []);
+        const fetchCategories = async () => {
+            try {
+                const response = await axiosClient.get(
+                    `${apiUrl}/api/admin/all-category`
+                );
+                if (response.data.status === 200) {
+                    setCategories(response.data.category);
+                } else {
+                    console.error("Error fetching categories:", response.data);
+                    setCategories([]);
+                }
+            } catch (error) {
+                console.error("Error fetching categories:", error.message);
+                setCategories([]);
+            }
+        };
 
+        fetchProducts();
+        fetchCategories();
+    }, []);
+    const getCategoryName = (categoryId) => {
+        const category = categories.find((c) => c.id === categoryId);
+        return category ? category.name : "Uncategorized";
+    };
+    const deleteProduct = (e, productId) => {
+        e.preventDefault();
+    
+        const thisClicked = e.currentTarget;
+        thisClicked.innerText = 'Deleting';
+    
+        axiosClient.delete(`/admin/delete-product/${productId}`).then(res => {
+            if (res.data.status === 200) {
+                swal("Success", res.data.message, "success").then(() => {
+                    window.location.reload();
+                });
+                let parentElement = thisClicked.closest("Grid[item]"); 
+                if (parentElement) {
+                    parentElement.remove();
+                }
+            } else if (res.data.status === 404) {
+                swal("Error", res.data.message, "error");
+                thisClicked.innerText = 'Delete';
+            }
+        });
+    }
     return (
         <>
             <main>
@@ -87,10 +131,30 @@ export default function ListProduct() {
                                         >
                                             Stock: {product.stock}
                                         </Typography>
+                                        <Typography
+                                            variant="h6"
+                                            color="text.secondary"
+                                        >
+                                            Category:{" "}
+                                            {getCategoryName(
+                                                product.categoryId
+                                            )}
+                                        </Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Button size="small">View</Button>
-                                        <Button size="small">Edit</Button>
+                                        <Link
+                                            to={`/edit-product/${product.id}`}
+                                        >
+                                            <Button size="small">Edit</Button>
+                                        </Link>
+                                        <Link>
+                                            <Button
+                                                size="small"
+                                                onClick={(e) => deleteProduct(e, product.id)}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </Link>
                                     </CardActions>
                                 </Card>
                             </Grid>

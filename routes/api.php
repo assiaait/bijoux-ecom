@@ -42,9 +42,13 @@ Route::middleware(['auth:sanctum', 'ability:admin'])->prefix('admin')->group(sta
         return $request->user();
     });
     Route::apiResource('categories', CategoryController::class);
-    Route::get('edit-category/{categorytId}', [CategoryController::class, 'edit']);
-    Route::put('update-category/{categorytId}', [CategoryController::class, 'update']);
-    
+    Route::get('edit-category/{categoryId}', [CategoryController::class, 'edit']);
+    Route::put('update-category/{categoryId}', [CategoryController::class, 'update']);
+    Route::delete('delete-category/{categoryId}', [CategoryController::class, 'destory']);
+    Route::get('all-category', [CategoryController::class, 'allCategory']);
+    Route::delete('delete-product/{productId}', [ProductController::class, 'destory']);
+    Route::get('edit-product/{productId}', [ProductController::class, 'edit']);
+    Route::put('update-product/{productId}', [ProductController::class, 'update']);
 });
 Route::get('/', function (Request $request) {
     return $request->user();
